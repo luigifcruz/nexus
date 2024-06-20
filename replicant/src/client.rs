@@ -29,11 +29,11 @@ use crate::state::{State};
 pub struct Client {
     pub host: String,
     pub port: u16,
-    #[serde(skip_deserializing, skip_serializing)]
+    #[serde(skip)]
     pub meta: Option<MetaClient<Channel>>,
-    #[serde(skip_deserializing, skip_serializing)]
+    #[serde(skip)]
     pub register: Option<RegisterClient<Channel>>,
-    #[serde(skip_deserializing, skip_serializing)]
+    #[serde(skip)]
     pub notify: Option<NotifyClient<Channel>>
 }
 

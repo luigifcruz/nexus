@@ -56,7 +56,7 @@ pub struct Hardware {
     network_mac: String,
 
     // Metadata
-    #[serde(skip_deserializing, skip_serializing)]
+    #[serde(skip)]
     up_to_date_db: bool,
 }
 

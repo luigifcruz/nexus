@@ -11,19 +11,19 @@ pub struct Replicant {
     hardware: Hardware,
     #[serde(default)]
     tags: Vec<String>,
-    #[serde(skip_deserializing, skip_serializing)]
+    #[serde(skip)]
     replicant_id: String,
-    #[serde(skip_deserializing, skip_serializing)]
+    #[serde(skip)]
     version: String,
-    #[serde(skip_deserializing, skip_serializing)]
+    #[serde(skip)]
     host: String,
-    #[serde(skip_deserializing, skip_serializing)]
+    #[serde(skip)]
     port: u16,
-    #[serde(skip_deserializing, skip_serializing)]
+    #[serde(skip)]
     instances: Option<HashMap<String, Instance>>,
 
     // Metadata
-    #[serde(skip_deserializing, skip_serializing)]
+    #[serde(skip)]
     up_to_date_db: bool,
 }
 

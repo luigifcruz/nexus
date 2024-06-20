@@ -12,7 +12,7 @@ use crate::state::{State};
 
 #[derive(Default, Debug, Serialize, Deserialize)]
 pub struct Server {
-    #[serde(skip_deserializing, skip_serializing)]
+    #[serde(skip)]
     pub listener: Option<TcpListener>,
 }
 
