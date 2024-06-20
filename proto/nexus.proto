@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+import "enums.proto";
+import "generic.proto";
+
+package nexus;
+
+// Meta service.
+
+service Meta {
+  rpc Info (generic.Empty) returns (InfoResponse) {}
+  rpc Ping (generic.Empty) returns (generic.Empty) {}
+}
+
+message InfoResponse {
+  string version = 1;
+  bool healthy = 2;
+  string info = 3;
+}
+
+// Register service.
+
+service Register {
+  rpc RegisterReplicant (RegisterReplicantRequest) returns (RegisterResponse) {}
+  rpc RegisterInstance (RegisterInstanceRequest) returns (RegisterResponse) {}
+}
+
+message RegisterReplicantRequest {
+  string name = 1;
+  string replicant_id = 2;
+  string version = 3;
+  repeated string tags = 4;
+  string host = 5;
+  int32 port = 6;
+}
+
+message RegisterInstanceRequest {
+  string name = 1;
+  string instance_id = 2;
+  string replicant_id = 3;
+  string version = 4;
+  repeated string tags = 5;
+  string host = 6;
+  int32 port = 7;
+}
+
+message RegisterResponse {
+  bool success = 1;
+}
+
+// Notify service.
+
+service Notify {
+  rpc NotifyReplicantChange (NotifyReplicantChangeRequest) returns (NotifyResponse) {}
+  rpc NotifyInstanceChange (NotifyInstanceChangeRequest) returns (NotifyResponse) {}
+}
+
+message NotifyReplicantChangeRequest {
+  string replicant_id = 1;
+}
+
+message NotifyInstanceChangeRequest {
+  string instance_id = 1;
+}
+
+message NotifyResponse {
+  bool success = 1;
+}

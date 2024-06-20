@@ -1,0 +1,112 @@
+syntax = "proto3";
+
+import "enums.proto";
+import "generic.proto";
+
+package replicant;
+
+// Meta service.
+
+service Meta {
+  rpc Info (generic.Empty) returns (InfoResponse) {}
+  rpc Ping (generic.Empty) returns (generic.Empty) {}
+}
+
+message InfoResponse {
+  string name = 1;
+  string replicant_id = 2;
+  string version = 3;
+  repeated string tags = 4;
+  bool healthy = 5;
+  string info = 6;
+}
+
+// Hardware service.
+
+service Hardware {
+  rpc GetHardware (generic.Empty) returns (GetReplicantHardwareResponse) {}
+  rpc GetMetrics (generic.Empty) returns (GetReplicantMetricsResponse) {}
+}
+
+message GetReplicantHardwareResponse {
+  enums.GpuType gpu_type = 1;
+  string gpu_pcie_id = 2;
+
+  enums.CpuType cpu_type = 3;
+  string cpu_socket = 4;
+  repeated int32 cpu_threads = 6;
+
+  int32 memory_size = 7;
+
+  int32 storage_size = 8;
+  string storage_path = 9;
+
+  enums.NetworkType network_type = 10;
+  enums.NetworkSpeed network_speed = 11;
+  string network_pcie_id = 12;
+  string network_mac = 13;
+}
+
+message GetReplicantMetricsResponse {
+  int32 cpu_usage = 1;
+  int32 cpu_memory_usage = 2;
+
+  int32 storage_usage = 3;
+  int32 storage_capacity = 4;
+
+  int32 network_download_usage = 5;
+  int32 network_upload_usage = 6;
+
+  int32 gpu_compute_usage = 7;
+  int32 gpu_memory_usage = 8;
+  int32 gpu_pcie_usage = 9;
+  int32 gpu_power_usage = 10;
+  int32 gpu_temperature = 11;
+}
+
+// Instance service.
+
+enum InstanceStatus {
+  NONE = 0;
+  STARTING = 1;
+  RUNNING = 2;
+  ERRORED = 3;
+}
+
+service Instance {
+  rpc GetInstances (generic.Empty) returns (GetReplicantInstancesResponse) {}
+  rpc StartInstance (StartInstanceRequest) returns (StartInstanceResponse) {}
+  rpc ResetInstance (ResetInstanceRequest) returns (ResetInstanceResponse) {}
+}
+
+message InstanceDescriptor {
+  string instance_id = 1;
+  repeated string tags = 2;
+  InstanceStatus status = 3;
+
+  string docker_image = 4;
+  repeated string docker_args = 5;
+}
+
+message GetReplicantInstancesResponse {
+  repeated InstanceDescriptor instances = 1;
+}
+
+message StartInstanceRequest {
+  repeated string tags = 1;
+
+  string docker_image = 2;
+  repeated string docker_args = 3;
+}
+
+message StartInstanceResponse {
+  bool success = 1;
+}
+
+message ResetInstanceRequest {
+  string instance_id = 1;
+}
+
+message ResetInstanceResponse {
+  bool success = 1;
+}

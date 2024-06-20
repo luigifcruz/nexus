@@ -1,0 +1,26 @@
+version: 1.0
+nexus:
+  host: "http://localhost"
+  port: 50051
+replicant:
+  name: "replicant-luv"
+  tags:
+    - "test"
+    - "roadrunner"
+  hardware:
+    gpu_type: NVIDIA_RTX6000_ADA
+    gpu_pcie_id: "0:1:0"
+    cpu_type: AMD_EPYC_GENOA
+    cpu_socket: "0"
+    cpu_threads: [0, 1, 2, 3, 4, 5, 6, 7]
+    memory_size: 128000
+    storage_size: 1000000
+    storage_path: "/mnt/data"
+    network_type: CONNECTX7
+    network_speed: GBE200
+    network_pcie_id: "0:2:0"
+    network_mac: "00:00:00:00:00:00"
+routines:
+  ping:
+    interval: 15
+    timeout: 60

@@ -1,0 +1,7 @@
+version: 1.0
+database:
+  path: "sqlite:///nexus.db"
+routines:
+  ping:
+    interval: 15
+    timeout: 60

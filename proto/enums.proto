@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package enums;
+
+enum GpuType {
+  NVIDIA_RTX6000_ADA = 0;
+  NVIDIA_A4000 = 1;
+}
+
+enum CpuType {
+  AMD_EPYC_MILAN = 0;
+  AMD_EPYC_GENOA = 1;
+}
+
+enum NetworkType {
+  CONNECTX6 = 0;
+  CONNECTX7 = 1;
+}
+
+enum NetworkSpeed {
+  GBE1 = 0;
+  GBE10 = 1;
+  GBE25 = 2;
+  GBE40 = 3;
+  GBE100 = 4;
+  GBE200 = 5;
+}

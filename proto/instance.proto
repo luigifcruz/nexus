@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+import "enums.proto";
+import "generic.proto";
+
+package instance;
+
+// Meta service.
+
+service Meta {
+  rpc Info (generic.Empty) returns (InfoResponse) {}
+  rpc Ping (generic.Empty) returns (generic.Empty) {}
+}
+
+message InfoResponse {
+  string name = 1;
+  string instance_id = 2;
+  string replicant_id = 3;
+  string version = 4;
+  repeated string tags = 5;
+  bool healthy = 6;
+  string info = 7;
+}
+
+// Runner service.
+
+enum RunnerStatus {
+  NONE = 0;
+  STANDBY = 1;
+  STARTING = 2;
+  RUNNING = 3;
+  ERRORED = 4;
+}
+
+service Runner {
+  rpc GetRunner (generic.Empty) returns (GetRunnerResponse) {}
+  rpc StartRunner (StartRunnerRequest) returns (StartRunnerResponse) {}
+  rpc ResetRunner (generic.Empty) returns (ResetRunnerResponse) {}
+}
+
+message GetRunnerResponse {
+  string observation_id = 1;
+  RunnerStatus status = 4;
+}
+
+message StartRunnerRequest {
+  string observation_id = 1;
+  string holoscan_config = 2;
+  string cyberether_config = 3;
+}
+
+message StartRunnerResponse {
+  bool success = 1;
+}
+
+message ResetRunnerResponse {
+  bool success = 1;
+}
+
+// Metrics service.
+
+service Metrics {
+  rpc GetNetworkMetrics (generic.Empty) returns (NetworkMetricsResponse) {}
+  rpc GetBladeMetrics (generic.Empty) returns (BladeMetricsResponse) {}
+}
+
+message NetworkMetricsResponse {
+  // TODO: Add.
+}
+
+message BladeMetricsResponse {
+  // TODO: Add.
+}
+
+// Synchronization service.
+
+service Synchronization {
+  rpc SetRecordingTrigger (SetRecordingTriggerRequest) returns (SetTriggerResponse) {}
+}
+
+message SetRecordingTriggerRequest {
+  string file_name = 2;
+  uint64 start_timestamp = 3;
+  uint64 stop_timestamp = 4;
+}
+
+message SetTriggerResponse {
+  bool success = 1;
+}
