@@ -38,4 +38,8 @@ impl Routine for Ping {
 
         Ok(())
     }
+
+    fn interval(state: &mut Arc<Mutex<State>>) -> u64 {
+        state.lock().unwrap().routines.ping.interval
+    }
 }

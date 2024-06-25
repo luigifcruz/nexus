@@ -30,7 +30,6 @@ async fn main() -> Result<(), Box<dyn Error>> {
     Server::initialize(&mut state).await?;
     Config::parse(&mut state)?;
     Client::initialize(&mut state).await?;
-    Routines::initialize(&mut state).await?;
     Server::serve(&mut state).await?;
     Routines::run(&mut state).await?;
 

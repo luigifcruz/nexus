@@ -19,20 +19,25 @@ pub struct Routines {
     pub ping: Ping,
 }
 
-fn spawn<R>(rx: mpsc::Receiver<bool>, 
-            tx: mpsc::Sender<bool>, 
-            mut state: Arc<Mutex<State>>,
-            interval: u64) -> std::thread::JoinHandle<()>
+struct RoutineThread {
+    handle: Option<std::thread::JoinHandle<()>>,
+    stop_tx: mpsc::Sender<bool>,
+}
+
+fn spawn<R>(stop_rx: mpsc::Receiver<bool>, 
+            error_tx: mpsc::Sender<bool>, 
+            mut state: Arc<Mutex<State>>) -> std::thread::JoinHandle<()>
             where R: Routine + Send + 'static {
     std::thread::spawn(move || {
         let worker = async {
             loop {
                 if let Err(e) = R::run(&mut state).await {
                     println!("[REPLICANT] Error running routine: {:?}", e);
-                    tx.send(true).unwrap();
+                    error_tx.send(true).unwrap();
                 }
 
-                if let Ok(_) = rx.recv_timeout(Duration::from_secs(interval)) {
+                let interval = R::interval(&mut state);
+                if let Ok(_) = stop_rx.recv_timeout(Duration::from_secs(interval)) {
                     println!("[REPLICANT] Stopping routine.");
                     break;
                 }
@@ -43,33 +48,51 @@ fn spawn<R>(rx: mpsc::Receiver<bool>,
     })
 }
 
+macro_rules! initialize_and_spawn_routine {
+    ($routine:ty, $state:expr, $error_tx:expr, $routines:expr) => {
+        <$routine>::initialize($state).await?;
+
+        if let Ok(_) = $state.lock() {
+            let (stop_tx, stop_rx) = mpsc::channel();
+
+            let handle = spawn::<$routine>(stop_rx, $error_tx.clone(), $state.clone());
+
+            $routines.push(RoutineThread {
+                handle: Some(handle),
+                stop_tx,
+            });
+        }
+    };
+}
+
 impl Routines {
-    pub async fn initialize(state: &mut Arc<Mutex<State>>) -> Result<(), Box<dyn Error>> {
-        Ping::initialize(state).await?;
-
-        Ok(())
-    }
-
     pub async fn run(state: &mut Arc<Mutex<State>>) -> Result<(), Box<dyn Error>> {
         let mut routines = vec![];
-        let (tx, rx) = mpsc::channel();
+        let (error_tx, error_rx) = mpsc::channel();
 
         // Start all routines.
 
-        if let Ok(s) = state.lock() {
-            routines.push(spawn::<Ping>(rx, tx.clone(), state.clone(), s.routines.ping.interval));
-        }
+        initialize_and_spawn_routine!(Ping, state, error_tx, routines);
+        initialize_and_spawn_routine!(Ping, state, error_tx, routines);
 
         // Install signal handler to stop all routines.
 
         ctrlc::set_handler(move || {
-            tx.send(true).unwrap();
+            println!("\n[REPLICANT] Received stop signal.");
+            error_tx.send(true).unwrap();
         }).unwrap();
 
-        // Wait for all routines to stop.
+        // Wait for any error signal.
 
-        for routine in routines {
-            routine.join().unwrap();
+        if let Ok(_) = error_rx.recv() {
+            println!("[REPLICANT] Stopping all routines.");
+
+            for routine in routines.iter_mut() {
+                routine.stop_tx.send(true).unwrap();
+                if let Some(handle) = routine.handle.take() {
+                    handle.join().unwrap();
+                }
+            }
         }
 
         println!("[REPLICANT] All routines have stopped.");
