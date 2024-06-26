@@ -8,7 +8,6 @@ use crate::database::Database;
 
 #[derive(Debug, Default)]
 pub struct State {
-    pub healthy: bool,
     pub version: String,
     pub replicants: HashMap<String, Replicant>,
     pub config: Config,

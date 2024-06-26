@@ -31,7 +31,6 @@ impl Meta for MetaService {
 
         if let Ok(state) = self.state.lock() {
             response.version = state.version.clone();
-            response.healthy = state.healthy;
             response.info = "Welcome to NEXUS (Next-gen Execution System)!".to_string();
         }
 

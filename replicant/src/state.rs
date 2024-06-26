@@ -8,7 +8,6 @@ use crate::routines::Routines;
 
 #[derive(Default, Debug)]
 pub struct State {
-    pub healthy: bool,
     pub replicant: Replicant,
     pub config: Config,
     pub server: Server,

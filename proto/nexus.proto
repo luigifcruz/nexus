@@ -14,7 +14,6 @@ service Meta {
 
 message InfoResponse {
   string version = 1;
-  bool healthy = 2;
   string info = 3;
 }
 

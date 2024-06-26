@@ -17,8 +17,7 @@ message InfoResponse {
   string replicant_id = 2;
   string version = 3;
   repeated string tags = 4;
-  bool healthy = 5;
-  string info = 6;
+  string info = 5;
 }
 
 // Hardware service.

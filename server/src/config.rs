@@ -17,7 +17,6 @@ struct YamlConfig {
 
 impl YamlConfig {
     fn fill_state_with_default_info(&self, s: &mut State) {
-        s.healthy = true;
         s.version = env!("CARGO_PKG_VERSION").to_string();
     }
     

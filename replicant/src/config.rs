@@ -20,11 +20,7 @@ struct YamlConfig {
     routines: Routines,
 }
 
-impl YamlConfig {
-    fn fill_state_with_default_info(&self, s: &mut State) {
-        s.healthy = true;
-    }
-    
+impl YamlConfig {    
     fn fill_state_with_server_info(&self, s: &mut State) {
         if let Some(listener) = &s.server.listener {
             let local_addr = listener.local_addr().unwrap();
@@ -73,7 +69,6 @@ impl Config {
                 return Err("Configuration file version mismatch.".into());
             }
 
-            config.fill_state_with_default_info(&mut s);
             config.fill_state_with_server_info(&mut s);
 
             config.fill_state_with_replicant_info(&mut s);

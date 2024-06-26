@@ -34,7 +34,6 @@ impl Meta for MetaService {
             response.replicant_id = s.replicant.get_replicant_id().to_string();
             response.version = s.replicant.get_version().to_string();
             response.tags = s.replicant.get_tags().to_vec();
-            response.healthy = s.healthy;
             response.info = format!("Welcome to a Replicant!");
         }
 
