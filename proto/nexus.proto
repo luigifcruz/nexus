@@ -20,6 +20,12 @@ message InfoResponse {
 // Register service.
 
 service Register {
+  rpc ListReplicants (ListReplicantsRequest) returns (ListReplicantsResponse) {}
+  rpc ListInstances (ListInstancesRequest) returns (ListInstancesResponse) {}
+
+  rpc DeleteReplicant (DeleteReplicantRequest) returns (generic.Empty) {}
+  rpc DeleteInstance (DeleteInstanceRequest) returns (generic.Empty) {}
+
   rpc RegisterReplicant (RegisterReplicantRequest) returns (RegisterResponse) {}
   rpc RegisterInstance (RegisterInstanceRequest) returns (RegisterResponse) {}
 }
@@ -41,6 +47,30 @@ message RegisterInstanceRequest {
   repeated string tags = 5;
   string host = 6;
   int32 port = 7;
+}
+
+message ListReplicantsRequest {
+}
+
+message ListReplicantsResponse {
+  repeated string replicants_id = 1;
+}
+
+message ListInstancesRequest {
+  string replicant_id = 1;
+}
+
+message ListInstancesResponse {
+  repeated string instances_id = 1;
+}
+
+message DeleteReplicantRequest {
+  string replicant_id = 1;
+}
+
+message DeleteInstanceRequest {
+  string replicant_id = 1;
+  string instance_id = 2;
 }
 
 message RegisterResponse {

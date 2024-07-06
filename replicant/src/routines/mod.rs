@@ -1,3 +1,4 @@
+mod register;
 mod ping;
 mod base;
 
@@ -10,6 +11,7 @@ use std::time::Duration;
 use std::sync::mpsc;
 
 use ping::Ping;
+use register::Register;
 use base::Routine;
 use crate::state::{State};
 
@@ -17,6 +19,8 @@ use crate::state::{State};
 pub struct Routines {
     #[serde(default)]
     pub ping: Ping,
+    #[serde(default)]
+    pub register: Register,
 }
 
 struct RoutineThread {
@@ -30,6 +34,8 @@ fn spawn<R>(stop_rx: mpsc::Receiver<bool>,
             where R: Routine + Send + 'static {
     std::thread::spawn(move || {
         let worker = async {
+            R::initialize(&mut state).await.unwrap();
+
             loop {
                 if let Err(e) = R::run(&mut state).await {
                     println!("[REPLICANT] Error running routine: {:?}", e);
@@ -38,7 +44,7 @@ fn spawn<R>(stop_rx: mpsc::Receiver<bool>,
 
                 let interval = R::interval(&mut state);
                 if let Ok(_) = stop_rx.recv_timeout(Duration::from_secs(interval)) {
-                    println!("[REPLICANT] Stopping routine.");
+                    R::terminate(&mut state).await.unwrap();
                     break;
                 }
             }
@@ -50,18 +56,12 @@ fn spawn<R>(stop_rx: mpsc::Receiver<bool>,
 
 macro_rules! initialize_and_spawn_routine {
     ($routine:ty, $state:expr, $error_tx:expr, $routines:expr) => {
-        <$routine>::initialize($state).await?;
-
-        if let Ok(_) = $state.lock() {
-            let (stop_tx, stop_rx) = mpsc::channel();
-
-            let handle = spawn::<$routine>(stop_rx, $error_tx.clone(), $state.clone());
-
-            $routines.push(RoutineThread {
-                handle: Some(handle),
-                stop_tx,
-            });
-        }
+        let (stop_tx, stop_rx) = mpsc::channel();
+        let handle = spawn::<$routine>(stop_rx, $error_tx.clone(), $state.clone());
+        $routines.push(RoutineThread {
+            handle: Some(handle),
+            stop_tx,
+        });
     };
 }
 
@@ -73,7 +73,7 @@ impl Routines {
         // Start all routines.
 
         initialize_and_spawn_routine!(Ping, state, error_tx, routines);
-        initialize_and_spawn_routine!(Ping, state, error_tx, routines);
+        initialize_and_spawn_routine!(Register, state, error_tx, routines);
 
         // Install signal handler to stop all routines.
 

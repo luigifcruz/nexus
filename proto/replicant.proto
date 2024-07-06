@@ -73,7 +73,7 @@ enum InstanceStatus {
 }
 
 service Instance {
-  rpc GetInstances (generic.Empty) returns (GetReplicantInstancesResponse) {}
+  rpc ListInstances (generic.Empty) returns (ListReplicantInstancesResponse) {}
   rpc StartInstance (StartInstanceRequest) returns (StartInstanceResponse) {}
   rpc ResetInstance (ResetInstanceRequest) returns (ResetInstanceResponse) {}
 }
@@ -87,7 +87,7 @@ message InstanceDescriptor {
   repeated string docker_args = 5;
 }
 
-message GetReplicantInstancesResponse {
+message ListReplicantInstancesResponse {
   repeated InstanceDescriptor instances = 1;
 }
 

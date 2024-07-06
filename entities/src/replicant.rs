@@ -18,7 +18,7 @@ pub struct Replicant {
     #[serde(skip)]
     host: String,
     #[serde(skip)]
-    port: u16,
+    port: i32,
     #[serde(skip)]
     instances: Option<HashMap<String, Instance>>,
 
@@ -48,7 +48,7 @@ impl Replicant {
         &self.host
     }
 
-    pub fn get_port(&self) -> u16 {
+    pub fn get_port(&self) -> i32 {
         self.port
     }
 
@@ -85,7 +85,7 @@ impl Replicant {
         self.host = host;
     }
 
-    pub fn set_port(&mut self, port: u16) {
+    pub fn set_port(&mut self, port: i32) {
         self.up_to_date_db = false;
         self.port = port;
     }

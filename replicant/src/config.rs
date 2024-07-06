@@ -25,7 +25,7 @@ impl YamlConfig {
         if let Some(listener) = &s.server.listener {
             let local_addr = listener.local_addr().unwrap();
             s.replicant.set_host(local_addr.ip().to_string());
-            s.replicant.set_port(local_addr.port());
+            s.replicant.set_port(local_addr.port().into());
         }
     }
     

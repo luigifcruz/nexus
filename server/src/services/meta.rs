@@ -43,7 +43,7 @@ impl Meta for MetaService {
     ) -> Result<Response<Empty>, Status> {
         println!("[NEXUS] Ping request received!");
 
-        let response = Empty {};
+        let response = Empty::default();
 
         Ok(Response::new(response))
     }

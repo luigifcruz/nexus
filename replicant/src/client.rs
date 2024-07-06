@@ -47,8 +47,6 @@ impl Client {
             s.client.notify = Some(NotifyClient::connect(nexus_path.clone()).await?);
         }
 
-        Client::ping(state).await?;
-
         println!("[REPLICANT] Successfully connected to Nexus endpoint.");
         
         Ok(())
