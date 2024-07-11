@@ -11,22 +11,22 @@
 
 // TODO: Notify update service.
 
-mod services;
-mod state;
 mod cli;
 mod config;
-mod server;
 mod database;
+mod methods;
+mod server;
+mod services;
+mod state;
 
 use std::error::Error;
-use std::sync::Arc;
-use std::sync::Mutex;
+use std::sync::{Mutex, Arc};
 
-use config::Config;
 use cli::Cli;
-use server::Server;
+use config::Config;
 use database::Database;
-use state::{State};
+use server::Server;
+use state::State;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {

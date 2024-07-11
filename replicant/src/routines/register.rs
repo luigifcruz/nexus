@@ -1,11 +1,10 @@
 use std::error::Error;
-use std::sync::Arc;
-use std::sync::Mutex;
+use std::sync::{Mutex, Arc};
 use serde::{Serialize, Deserialize};
 
 use crate::methods;
 use crate::routines::base::Routine;
-use crate::state::{State};
+use crate::state::State;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Register {
@@ -75,13 +74,13 @@ impl Routine for Register {
 
         Ok(())
     }
-    
+
     async fn terminate(state: &mut Arc<Mutex<State>>) -> Result<(), Box<dyn Error>> {
         println!("[REPLICANT] Terminating register routine.");
 
         if let Ok(mut s) = state.lock() {
             // If not connected, do nothing.
-            
+
             if !s.routines.ping.connected {
                 return Ok(());
             }

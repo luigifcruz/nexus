@@ -1,9 +1,8 @@
 use std::error::Error;
-use std::sync::Arc;
-use std::sync::Mutex;
+use std::sync::{Mutex, Arc};
 use clap::Parser;
 
-use crate::state::{State};
+use crate::state::State;
 
 #[derive(Default, Debug, Parser)]
 pub struct Args {

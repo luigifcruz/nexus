@@ -1,13 +1,12 @@
 use std::error::Error;
-use std::sync::Arc;
-use std::sync::Mutex;
-use tonic::{transport};
+use std::sync::{Mutex, Arc};
+use tonic::transport;
 use tokio::net::TcpListener;
 use tokio_stream::wrappers::TcpListenerStream;
 
 use crate::services::{MetaService, MetaServer};
 use crate::services::{RegisterService, RegisterServer};
-use crate::state::{State};
+use crate::state::State;
 
 #[derive(Default, Debug)]
 pub struct Server {

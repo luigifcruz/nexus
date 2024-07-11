@@ -1,11 +1,11 @@
 use std::error::Error;
-use std::sync::Arc;
-use std::sync::Mutex;
+use std::sync::{Mutex, Arc};
 use serde::{Serialize, Deserialize};
 
 use crate::client::Client;
 use crate::routines::base::Routine;
-use crate::state::{State};
+use crate::routines::Routines;
+use crate::state::State;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Ping {
@@ -41,6 +41,7 @@ impl Routine for Ping {
                     if !s.routines.ping.connected {
                         println!("[REPLICANT] Nexus connected.");
                         s.routines.ping.counter = 0;
+                        Routines::notify(&mut s, "register");
                     }
 
                     s.routines.ping.connected = true;
@@ -52,6 +53,7 @@ impl Routine for Ping {
                     if s.routines.ping.connected {
                         println!("[REPLICANT] Nexus disconnected.");
                         s.routines.ping.counter = 0;
+                        Routines::notify(&mut s, "register");
                     }
 
                     s.routines.ping.connected = false;

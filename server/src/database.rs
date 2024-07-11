@@ -1,9 +1,8 @@
 use std::error::Error;
-use std::sync::Arc;
-use std::sync::Mutex;
+use std::sync::{Mutex, Arc};
 use serde::{Serialize, Deserialize};
 
-use crate::state::{State};
+use crate::state::State;
 
 #[derive(Debug, Default, Clone, Serialize, Deserialize)]
 pub struct Database {

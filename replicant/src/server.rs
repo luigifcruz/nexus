@@ -1,14 +1,13 @@
 use std::error::Error;
-use std::sync::Arc;
-use std::sync::Mutex;
-use tonic::{transport};
+use std::sync::{Mutex, Arc};
+use tonic::transport;
 use tokio::net::TcpListener;
 use tokio_stream::wrappers::TcpListenerStream;
 use serde::{Serialize, Deserialize};
 
 use crate::services::{MetaService, MetaServer};
 use crate::services::{HardwareService, HardwareServer};
-use crate::state::{State};
+use crate::state::State;
 
 #[derive(Default, Debug, Serialize, Deserialize)]
 pub struct Server {
@@ -36,7 +35,7 @@ impl Server {
         };
 
         if let Ok(s) = state.lock() {
-            println!("[REPLICANT] Server listening on port {}:{}.", s.replicant.get_host(), 
+            println!("[REPLICANT] Server listening on port {}:{}.", s.replicant.get_host(),
                                                                     s.replicant.get_port());
         }
 

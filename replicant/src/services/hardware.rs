@@ -1,6 +1,5 @@
 use tonic::{Request, Response, Status};
-use std::sync::Arc;
-use std::sync::Mutex;
+use std::sync::{Mutex, Arc};
 
 use crate::state::State;
 use crate::services::base::generic::{

@@ -9,15 +9,14 @@ mod routines;
 mod methods;
 
 use std::error::Error;
-use std::sync::Arc;
-use std::sync::Mutex;
+use std::sync::{Mutex, Arc};
 
 use config::Config;
 use cli::Cli;
 use server::Server;
 use client::Client;
 use routines::Routines;
-use state::{State};
+use state::State;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {

@@ -11,8 +11,7 @@ pub mod nexus {
 }
 
 use std::error::Error;
-use std::sync::Arc;
-use std::sync::Mutex;
+use std::sync::{Mutex, Arc};
 use tonic::transport::Channel;
 use serde::{Serialize, Deserialize};
 
@@ -23,7 +22,7 @@ use crate::client::nexus::meta_client::MetaClient;
 use crate::client::nexus::register_client::RegisterClient;
 use crate::client::nexus::notify_client::NotifyClient;
 
-use crate::state::{State};
+use crate::state::State;
 
 #[derive(Debug, Default, Clone, Serialize, Deserialize)]
 pub struct Client {

@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use entities::{Replicant};
+use entities::Replicant;
 use crate::cli::Cli;
 use crate::server::Server;
 use crate::database::Database;
