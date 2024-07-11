@@ -1,10 +1,13 @@
 use std::error::Error;
 use std::sync::{Mutex, Arc};
 use serde::{Serialize, Deserialize};
+use tonic::Request;
 
-use crate::methods;
 use crate::routines::base::Routine;
 use crate::state::State;
+use crate::client::nexus::{
+    DeleteReplicantRequest, ListReplicantsRequest, RegisterReplicantRequest,
+};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Register {
@@ -26,6 +29,60 @@ impl Default for Register {
     }
 }
 
+impl Register {
+    /// Check if the current replicant is registered with NEXUS.
+    ///
+    /// This is done by listing all the replicants listed with NEXUS
+    /// and checking if the current replicant ID is there.
+    pub async fn check_replicant(s: &mut State) -> Result<(), Box<dyn Error>> {
+        let request = Request::new(ListReplicantsRequest {});
+
+        if let Some(register) = &mut s.client.register {
+            let response = register.list_replicants(request).await?;
+
+            let replicants_id = response.into_inner().replicants_id;
+            let replicant_id = s.replicant.get_replicant_id().to_string();
+
+            if !replicants_id.contains(&replicant_id) {
+                return Err("Replicant ID not found in NEXUS.".into());
+            }
+        }
+
+        Ok(())
+    }
+
+    /// Registers the current replicant with NEXUS.
+    pub async fn register_replicant(s: &mut State) -> Result<(), Box<dyn Error>> {
+        let request = Request::new(RegisterReplicantRequest {
+            name: s.replicant.get_name().to_string(),
+            replicant_id: s.replicant.get_replicant_id().to_string(),
+            version: s.replicant.get_version().to_string(),
+            tags: s.replicant.get_tags().to_vec(),
+            host: s.replicant.get_host().to_string(),
+            port: s.replicant.get_port(),
+        });
+
+        if let Some(register) = &mut s.client.register {
+            register.register_replicant(request).await?;
+        }
+
+        Ok(())
+    }
+
+    /// Unregister the current replicant with NEXUS.
+    pub async fn unregister_replicant(s: &mut State) -> Result<(), Box<dyn Error>> {
+        let request = Request::new(DeleteReplicantRequest {
+            replicant_id: s.replicant.get_replicant_id().to_string(),
+        });
+
+        if let Some(register) = &mut s.client.register {
+            register.delete_replicant(request).await?;
+        }
+
+        Ok(())
+    }
+}
+
 impl Routine for Register {
     async fn initialize(_state: &mut Arc<Mutex<State>>) -> Result<(), Box<dyn Error>> {
         println!("[REPLICANT] Initializing register routine.");
@@ -44,7 +101,7 @@ impl Routine for Register {
             // If registered, check if we are really registered.
 
             if s.routines.register.registered {
-                match methods::Register::check_replicant(&mut s).await {
+                match Register::check_replicant(&mut s).await {
                     Ok(_) => {
                         s.routines.register.counter += 1;
                     },
@@ -59,7 +116,7 @@ impl Routine for Register {
             // If not registered, attempt to register.
 
             if !s.routines.register.registered {
-                match methods::Register::register_replicant(&mut s).await {
+                match Register::register_replicant(&mut s).await {
                     Ok(_) => {
                         println!("[REPLICANT] Successfully registered with Nexus.");
                         s.routines.register.counter = 0;
@@ -88,7 +145,7 @@ impl Routine for Register {
             // If registered, unregister.
 
             if s.routines.register.registered {
-                match methods::Register::unregister_replicant(&mut s).await {
+                match Register::unregister_replicant(&mut s).await {
                     Ok(_) => {
                         println!("[REPLICANT] Successfully unregistered with Nexus.");
                     },

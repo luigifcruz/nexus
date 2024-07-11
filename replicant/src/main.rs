@@ -6,7 +6,6 @@ mod config;
 mod cli;
 mod client;
 mod routines;
-mod methods;
 
 use std::error::Error;
 use std::sync::{Mutex, Arc};

@@ -14,7 +14,6 @@
 mod cli;
 mod config;
 mod database;
-mod methods;
 mod server;
 mod services;
 mod state;
