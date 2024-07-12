@@ -28,13 +28,13 @@ struct Worker {
 
 impl Worker {
     pub fn notify(&mut self) {
-        if let Some(tx) = self.interrupt_tx.take() {
+        if let Some(tx) = self.interrupt_tx.as_ref() {
             tx.send(InterruptType::Notify).unwrap();
         }
     }
 
     pub fn stop(&mut self) {
-        if let Some(tx) = self.interrupt_tx.take() {
+        if let Some(tx) = self.interrupt_tx.as_ref() {
             tx.send(InterruptType::Stop).unwrap();
         }
 
