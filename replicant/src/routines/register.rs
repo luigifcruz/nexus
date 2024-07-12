@@ -122,7 +122,8 @@ impl Routine for Register {
                         s.routines.register.counter = 0;
                         s.routines.register.registered = true;
                     },
-                    Err(_) => {
+                    Err(e) => {
+                        println!("[REPLICANT] Error registering with Nexus. {:?}", e);
                         s.routines.register.counter += 1;
                     }
                 }
