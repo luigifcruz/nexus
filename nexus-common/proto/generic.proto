@@ -1,0 +1,156 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package generic;
+
+import "enums.proto";
+
+// General
+
+message Empty {}
+
+message Ack {
+    bool success = 1;
+    string message = 2;
+}
+
+// Objects
+
+message Image {
+    string image_id = 1;
+    string docker_image = 2;
+    string docker_entrypoint = 3;
+    repeated string docker_args = 4;
+    repeated string docker_env = 5;
+}
+
+message Observation {
+    string observation_id = 1;
+    google.protobuf.Timestamp start_time = 2;
+    google.protobuf.Timestamp end_time = 3;
+    repeated string replicant_tags = 4;
+    int32 number_of_replicants = 5;
+    string image_id = 6;
+    enums.Status status = 7;
+    google.protobuf.Timestamp created_at = 8;
+    google.protobuf.Timestamp updated_at = 9;
+    repeated string replicant_ids = 10;
+}
+
+message Replicant {
+    string replicant_id = 1;
+    string version = 2;
+    repeated string tags = 3;
+    enums.Status status = 4;
+    HardwareSpec hardware = 5;
+    google.protobuf.Timestamp last_seen = 6;
+    google.protobuf.Timestamp created_at = 7;
+}
+
+// Hardware Metrics
+
+message HardwareMetrics {
+    google.protobuf.Timestamp timestamp = 1;
+    CpuMetrics cpu = 2;
+    MemoryMetrics memory = 3;
+    StorageMetrics storage = 4;
+    NetworkMetrics network = 5;
+    GpuMetrics gpu = 6;
+    string replicant_id = 7;
+}
+
+message CpuMetrics {
+    float usage_percent = 1;
+    float temperature_celsius = 2;
+    repeated float per_core_usage = 3;
+}
+
+message MemoryMetrics {
+    uint64 used_bytes = 1;
+    uint64 total_bytes = 2;
+    float usage_percent = 3;
+}
+
+message StorageMetrics {
+    uint64 used_bytes = 1;
+    uint64 total_bytes = 2;
+    float usage_percent = 3;
+    uint64 read_bps = 4;
+    uint64 write_bps = 5;
+}
+
+message NetworkMetrics {
+    uint64 rx_bytes = 1;
+    uint64 tx_bytes = 2;
+    float rx_bandwidth_bps = 3;
+    float tx_bandwidth_bps = 4;
+}
+
+message GpuMetrics {
+    float compute_usage_percent = 1;
+    uint64 memory_used_bytes = 2;
+    uint64 memory_total_bytes = 3;
+    float memory_usage_percent = 4;
+    uint64 pcie_rx_bandwidth_bps = 5;
+    uint64 pcie_tx_bandwidth_bps = 6;
+    float power_usage_watts = 7;
+    float temperature_celsius = 8;
+}
+
+// Generic Metrics
+
+message GenericMetric {
+    google.protobuf.Timestamp timestamp = 1;
+    optional string instance_id = 2;
+    oneof value {
+        string string_value = 3;
+        uint64 int_value = 4;
+        double double_value = 5;
+        bool bool_value = 6;
+    }
+}
+
+// Observation Metrics
+
+message ObservationMetrics {
+    google.protobuf.Timestamp timestamp = 1;
+    GpuMetrics aggregate_gpu_metrics = 2;
+    NetworkMetrics aggregate_network_metrics = 3;
+    StorageMetrics aggregate_storage_metrics = 4;
+    repeated GenericMetric aggregate_generic_metrics = 5;
+    repeated GenericMetric generic_metrics = 6;
+    uint64 observation_storage_size_bytes = 7;
+    string observation_id = 8;
+}
+
+// Hardware Specification
+
+message HardwareSpec {
+    enums.GpuType gpu_type = 1;
+    string gpu_pcie_id = 2;
+
+    enums.CpuType cpu_type = 3;
+    string cpu_socket = 4;
+    repeated int32 cpu_threads = 5;
+
+    int32 memory_size = 6;
+
+    int32 storage_size = 7;
+    string storage_path = 8;
+
+    enums.NetworkType network_type = 9;
+    enums.NetworkSpeed network_speed = 10;
+    string network_pcie_id = 11;
+    string network_interface = 12;
+    string network_mac = 13;
+}
+
+// Logs
+
+message LogEntry {
+    google.protobuf.Timestamp timestamp = 1;
+    enums.LogLevel level = 2;
+    string message = 3;
+    string observation_id = 4;
+}

@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package meta;
+
+import "enums.proto";
+import "generic.proto";
+
+service Meta {
+    rpc Ping (generic.Empty) returns (generic.Empty) {}
+    rpc Info (generic.Empty) returns (InfoResponse) {}
+}
+
+message InfoResponse {
+    string version = 1;
+    string info = 2;
+}

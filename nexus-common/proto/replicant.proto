@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package replicant;
+
+import "enums.proto";
+import "generic.proto";
+
+service Replicant {
+    rpc PushMetrics (MetricsRequest) returns (generic.Empty);
+    rpc PushHardware (HardwareRequest) returns (generic.Empty);
+    rpc PushStatus (StatusRequest) returns (generic.Empty);
+
+    rpc Signaller (SignallerRequest) returns (stream SignallerResponse);
+
+    rpc InstanceDispatch (stream InstanceDispatchEnvelope) returns (stream InstanceDispatchEnvelope);
+}
+
+//
+///replicant/push_metrics
+
+message MetricsRequest {
+    string replicant_id = 1;
+    generic.HardwareMetrics metrics = 2;
+}
+
+///replicant/push_hardware
+
+message HardwareRequest {
+    string replicant_id = 1;
+    generic.HardwareSpec spec = 2;
+}
+
+///replicant/push_status
+
+message StatusRequest {
+    string replicant_id = 1;
+    enums.Status status = 2;
+    optional generic.LogEntry log = 3;
+}
+
+//
+///replicant/signaller
+
+message SignallerRequest {
+    string replicant_id = 1;
+    string version = 2;
+}
+
+message SignallerResponse {
+    bool push_metrics = 1;
+    bool push_hardware = 2;
+    bool push_status = 3;
+}
+
+//
+///replicant/instance_dispatch
+
+message InstanceDispatchEnvelope {
+    string replicant_id = 1;
+    string command_id = 2;
+
+    oneof payload {
+        generic.Ack ack = 3;
+        Command command = 4;
+    }
+
+    message Command {
+        oneof action {
+            CreateInstanceRequest create = 1;
+            DestroyInstanceRequest destroy = 2;
+        }
+
+        message CreateInstanceRequest {
+            string replicant_id = 1;
+            string docker_image = 2;
+            string docker_entrypoint = 3;
+            repeated string docker_args = 4;
+            repeated string docker_env = 5;
+        }
+
+        message DestroyInstanceRequest {
+            string id = 1;
+        }
+    }
+}

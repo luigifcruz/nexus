@@ -1,0 +1,38 @@
+[package]
+name = "nexus-server"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+async-trait = "0.1"
+nexus-common = { path = "../nexus-common" }
+prost = "0.12.4"
+tokio = { version = "1", features = ["full"] }
+tokio-stream = { version = "0.1", features = ["net"] }
+tonic = { version = "0.11", features = ["transport"] }
+tonic-web = "0.11"
+tonic-reflection = "0.11"
+tower-http = "0.4"
+clap = { version = "4", features = ["derive", "env"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_yaml = "0.8"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+prost-types = "0.12.4"
+ctrlc = "3.5.0"
+uuid = { version = "1.0", features = ["v4"] }
+chrono = { version = "0.4", features = ["serde"] }
+thiserror = "1.0"
+
+[build-dependencies]
+tonic-build = "0.11.0"
+
+[lib]
+name = "nexus_server"
+path = "src/lib.rs"
+
+[[bin]]
+name = "nexus-server"
+path = "src/main.rs"

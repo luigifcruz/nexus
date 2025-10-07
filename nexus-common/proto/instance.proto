@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package instance;
+
+import "enums.proto";
+import "generic.proto";
+
+service Instance {
+    rpc PushMetrics (MetricsRequest) returns (generic.Empty);
+    rpc PushStatus (StatusRequest) returns (generic.Empty);
+
+    rpc Signaller (SignallerRequest) returns (stream SignallerResponse);
+
+    rpc RunnerNotifier (stream RunnerNotifierEnvelope) returns (stream RunnerNotifierEnvelope);
+}
+
+//
+///instance/push_metrics
+
+message MetricsRequest {
+    string instance_id = 1;
+    repeated string labels = 2;
+    repeated generic.GenericMetric metrics = 3;
+}
+
+///instance/push_status
+
+message StatusRequest {
+    string instance_id = 1;
+    enums.Status status = 2;
+    optional generic.LogEntry log = 3;
+}
+
+//
+///instance/signaller
+
+message SignallerRequest {
+    string instance_id = 1;
+    string version = 2;
+}
+
+message SignallerResponse {
+    bool push_metrics = 1;
+    bool push_status = 2;
+}
+
+//
+///instance/runner_notifier
+
+message RunnerNotifierEnvelope {
+    string command_id = 1;
+
+    oneof payload {
+        generic.Ack ack = 2;
+        Command command = 3;
+    }
+
+    message Command {
+        oneof action {
+            SetRecordingTriggerRequest set_recording_trigger = 1;
+        }
+
+        message SetRecordingTriggerRequest {
+            string file_stub = 1;
+            uint64 start_timestamp = 2;
+            uint64 stop_timestamp = 3;
+        }
+    }
+}

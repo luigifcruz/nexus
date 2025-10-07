@@ -1,0 +1,133 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package nexus;
+
+import "enums.proto";
+import "generic.proto";
+
+service Nexus {
+    rpc CreateImage (CreateImageRequest) returns (CreateImageResponse);
+    rpc DestroyImage (DestroyImageRequest) returns (DestroyImageResponse);
+    rpc ListImages (ListImagesRequest) returns (ListImagesResponse);
+
+    rpc CreateObservation (CreateObservationRequest) returns (CreateObservationResponse);
+    rpc DestroyObservation (DestroyObservationRequest) returns (DestroyObservationResponse);
+    rpc ListObservations (ListObservationsRequest) returns (ListObservationsResponse);
+
+    rpc ListReplicants (ListReplicantsRequest) returns (ListReplicantsResponse);
+
+    rpc Signaller (NexusSignallerRequest) returns (stream NexusSignallerResponse);
+}
+
+//
+///nexus/create_image
+
+message CreateImageRequest {
+    string image_id = 1;
+    string docker_image = 2;
+    string docker_entrypoint = 3;
+    repeated string docker_args = 4;
+    repeated string docker_env = 5;
+    bool validate_only = 6;
+}
+
+message CreateImageResponse {
+    generic.Ack ack = 1;
+}
+
+///nexus/destroy_image
+
+message DestroyImageRequest {
+    string image_id = 1;
+}
+
+message DestroyImageResponse {
+    generic.Ack ack = 1;
+}
+
+//nexus/list_images
+
+message ListImagesRequest {
+}
+
+message ListImagesResponse {
+    generic.Ack ack = 1;
+    repeated generic.Image images = 2;
+}
+
+//
+///nexus/create_observation
+
+message CreateObservationRequest {
+    google.protobuf.Timestamp start_time = 1;
+    google.protobuf.Timestamp end_time = 2;
+    string image_id = 3;
+    repeated string replicant_tags = 4;
+    int32 number_of_replicants = 5;
+    bool validate_only = 6;
+}
+
+message CreateObservationResponse {
+    generic.Ack ack = 1;
+    optional string observation_id = 2;
+}
+
+///nexus/destroy_observation
+
+message DestroyObservationRequest {
+    string observation_id = 1;
+}
+
+message DestroyObservationResponse {
+    generic.Ack ack = 1;
+}
+
+//
+///nexus/list_observations
+
+message ListObservationsRequest {
+    repeated string status_filter = 1;
+    google.protobuf.Timestamp start_time_after = 2;
+    google.protobuf.Timestamp start_time_before = 3;
+    repeated string tag_filter = 4;
+}
+
+message ListObservationsResponse {
+    generic.Ack ack = 1;
+    repeated generic.Observation observations = 2;
+}
+
+//
+///nexus/list_replicants
+
+message ListReplicantsRequest {}
+
+message ListReplicantsResponse {
+    generic.Ack ack = 1;
+    repeated generic.Replicant replicants = 2;
+}
+
+///nexus/signaller
+
+message NexusSignallerRequest {
+    string version = 1;
+}
+
+message NexusSignallerResponse {
+    google.protobuf.Timestamp timestamp = 1;
+    repeated NexusSignallerEvent events = 2;
+    repeated generic.LogEntry logs = 3;
+    repeated generic.ObservationMetrics observation_metrics = 4;
+    repeated generic.HardwareMetrics hardware_metrics = 5;
+
+    message NexusSignallerEvent {
+        enums.EventType type = 1;
+
+        oneof payload {
+            generic.Observation observation = 2;
+            generic.Replicant replicant = 3;
+        }
+    }
+}
