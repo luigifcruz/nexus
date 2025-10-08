@@ -1,0 +1,3 @@
+[submodule "nexus-instance/stelline"]
+	path = nexus-instance/stelline
+	url = https://github.com/luigifcruz/stelline.git
