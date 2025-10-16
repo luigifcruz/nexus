@@ -5,9 +5,9 @@
     "type": "module",
     "scripts": {
         "clean:proto": "rm -rf ./src/lib/proto",
-        "generate:proto": "yarn clean:proto && mkdir -p ./src/lib/proto && npx protoc --plugin=protoc-gen-es=./node_modules/.bin/protoc-gen-es --es_out=./src/lib/proto --es_opt=target=ts,import_extension=ts,ts_nocheck=false -I ../nexus-common/proto ../nexus-common/proto/*.proto",
-        "dev": "yarn generate:proto && vite dev",
-        "build": "yarn generate:proto && vite build",
+        "generate:proto": "bun clean:proto && mkdir -p ./src/lib/proto && npx protoc --plugin=protoc-gen-es=./node_modules/.bin/protoc-gen-es --es_out=./src/lib/proto --es_opt=target=ts,import_extension=ts,ts_nocheck=false -I ../nexus-common/proto ../nexus-common/proto/*.proto",
+        "dev": "bun generate:proto && vite dev",
+        "build": "bun generate:proto && vite build",
         "prepare": "svelte-kit sync || echo ''",
         "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
         "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
