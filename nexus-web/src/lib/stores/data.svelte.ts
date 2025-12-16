@@ -374,3 +374,8 @@ class DataStore {
 
 // Export singleton instance
 export const dataStore = new DataStore();
+
+// Expose to window for debugging/testing
+if (typeof window !== "undefined") {
+    (window as any).__NEXUS_DATA_STORE__ = dataStore;
+}

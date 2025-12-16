@@ -65,11 +65,7 @@
             style: "background-color: #f3e5f5; border: 2px solid #9c27b0; border-radius: 8px; padding: 15px; font-weight: bold; color: #7b1fa2; width: 160px; text-align: center; white-space: pre-line; font-size: 12px; line-height: 1.3;",
         };
 
-        nodes = [
-            computeSwitchNode,
-            ...replicantNodes,
-            storageNode,
-        ];
+        nodes = [computeSwitchNode, ...replicantNodes, storageNode];
 
         const switchToReplicantEdges = replicantNodes.map((_, index) => ({
             id: `switch-to-replicant-${index + 1}`,
@@ -87,10 +83,7 @@
             animated: false,
         }));
 
-        edges = [
-            ...switchToReplicantEdges,
-            ...replicantToStorageEdges,
-        ];
+        edges = [...switchToReplicantEdges, ...replicantToStorageEdges];
     }
 
     onMount(() => {
@@ -124,6 +117,10 @@
         return () => clearInterval(interval);
     });
 </script>
+
+<svelte:head>
+    <title>Nexus - Compute Backend</title>
+</svelte:head>
 
 <div class="flex flex-col gap-6 py-6">
     <!-- Header -->

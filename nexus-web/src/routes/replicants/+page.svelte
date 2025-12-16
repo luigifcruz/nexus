@@ -2,8 +2,12 @@
     import { goto } from "$app/navigation";
     import { dataStore } from "$lib/stores/data.svelte";
     import type { ReplicantData, ConnectionStatus } from "$lib/types";
-    import { formatBytes, formatUptime, formatTimestamp } from "$lib/utils/formatters";
-    import {  getStatusIconWithClass } from "$lib/utils/status";
+    import {
+        formatBytes,
+        formatUptime,
+        formatTimestamp,
+    } from "$lib/utils/formatters";
+    import { getStatusIconWithClass } from "$lib/utils/status";
 
     import SearchIcon from "@tabler/icons-svelte/icons/search";
     import FilterIcon from "@tabler/icons-svelte/icons/filter";
@@ -23,30 +27,42 @@
     let statusFilter = $state("all");
 
     // Remove location references from replicants data
-    let cleanedReplicants = $derived(dataStore.replicants.map((r) => ({
-        ...r,
-        location: undefined,
-    })));
+    let cleanedReplicants = $derived(
+        dataStore.replicants.map((r) => ({
+            ...r,
+            location: undefined,
+        })),
+    );
 
     // Filtered data
-    let filteredReplicants = $derived(cleanedReplicants.filter((replicant) => {
-        const matchesSearch =
-            replicant.replicantId.toLowerCase().includes(searchTerm.toLowerCase());
+    let filteredReplicants = $derived(
+        cleanedReplicants.filter((replicant) => {
+            const matchesSearch = replicant.replicantId
+                .toLowerCase()
+                .includes(searchTerm.toLowerCase());
 
-        const matchesStatus =
-            statusFilter === "all" || replicant.status === statusFilter;
+            const matchesStatus =
+                statusFilter === "all" || replicant.status === statusFilter;
 
-        return matchesSearch && matchesStatus;
-    }));
+            return matchesSearch && matchesStatus;
+        }),
+    );
 
     // Status counts
     let statusCounts = $derived({
         total: dataStore.replicants.length,
-        online: dataStore.replicants.filter((r) => r.status === "online" || r.status === "running").length,
-        offline: dataStore.replicants.filter((r) => r.status === "offline" || r.status === "stopped").length,
-        maintenance: dataStore.replicants.filter((r) => r.status === "maintenance")
-            .length,
-        error: dataStore.replicants.filter((r) => r.status === "error" || r.status === "errored").length,
+        online: dataStore.replicants.filter(
+            (r) => r.status === "online" || r.status === "running",
+        ).length,
+        offline: dataStore.replicants.filter(
+            (r) => r.status === "offline" || r.status === "stopped",
+        ).length,
+        maintenance: dataStore.replicants.filter(
+            (r) => r.status === "maintenance",
+        ).length,
+        error: dataStore.replicants.filter(
+            (r) => r.status === "error" || r.status === "errored",
+        ).length,
     });
 
     function navigateToReplicant(id: string) {
@@ -57,6 +73,10 @@
         statusFilter = status;
     }
 </script>
+
+<svelte:head>
+    <title>Nexus - Replicants</title>
+</svelte:head>
 
 <div class="flex flex-col gap-6 py-4 md:py-6">
     <!-- Header -->

@@ -9,7 +9,12 @@
     import { dataStore } from "$lib/stores/data.svelte";
     import { apiSync } from "$lib/services/sync";
     import { transformReplicantMetrics } from "$lib/utils/metrics";
-    import { formatBytes, formatUptime, formatTimestamp, formatDateTime } from "$lib/utils/formatters";
+    import {
+        formatBytes,
+        formatUptime,
+        formatTimestamp,
+        formatDateTime,
+    } from "$lib/utils/formatters";
     import { getStatusIcon, getStatusIconWithClass } from "$lib/utils/status";
 
     import TagIcon from "@tabler/icons-svelte/icons/tag";
@@ -21,7 +26,6 @@
     import ActivityIcon from "@tabler/icons-svelte/icons/activity";
 
     import ChartBarIcon from "@tabler/icons-svelte/icons/chart-bar";
-
 
     import AlertTriangleIcon from "@tabler/icons-svelte/icons/alert-triangle";
     import ArrowLeftIcon from "@tabler/icons-svelte/icons/arrow-left";
@@ -58,7 +62,9 @@
     let error = $state("");
 
     // Real metrics from API
-    let metricsHistory = $derived(transformReplicantMetrics(dataStore.getReplicantMetrics(replicantId)));
+    let metricsHistory = $derived(
+        transformReplicantMetrics(dataStore.getReplicantMetrics(replicantId)),
+    );
 
     // Load replicant data when ID changes
     $effect(() => {
@@ -129,6 +135,10 @@
     }
 </script>
 
+<svelte:head>
+    <title>Nexus - {replicant?.replicantId ?? "Replicant"}</title>
+</svelte:head>
+
 <div class="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
     {#if loading}
         <div class="px-4 lg:px-6">
@@ -139,20 +149,32 @@
                     </Button>
                     <div class="space-y-2">
                         <div class="flex items-center gap-3">
-                            <div class="h-5 w-5 bg-muted rounded animate-pulse"></div>
-                            <div class="h-8 w-48 bg-muted rounded animate-pulse"></div>
-                            <div class="h-6 w-20 bg-muted rounded animate-pulse"></div>
+                            <div
+                                class="h-5 w-5 bg-muted rounded animate-pulse"
+                            ></div>
+                            <div
+                                class="h-8 w-48 bg-muted rounded animate-pulse"
+                            ></div>
+                            <div
+                                class="h-6 w-20 bg-muted rounded animate-pulse"
+                            ></div>
                         </div>
-                        <div class="h-4 w-32 bg-muted rounded animate-pulse ml-1"></div>
+                        <div
+                            class="h-4 w-32 bg-muted rounded animate-pulse ml-1"
+                        ></div>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="px-4 lg:px-6 mt-1">
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-3 mb-4">
+            <div
+                class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-3 mb-4"
+            >
                 {#each Array(7) as _}
-                    <div class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/30 animate-pulse">
+                    <div
+                        class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/50 animate-pulse"
+                    >
                         <div class="h-6 w-6 bg-muted rounded"></div>
                         <div class="h-4 w-12 bg-muted rounded"></div>
                         <div class="h-3 w-16 bg-muted rounded"></div>
@@ -166,11 +188,15 @@
                 <div class="h-10 w-full bg-muted rounded animate-pulse"></div>
                 <Card.Root>
                     <Card.Header>
-                        <div class="h-6 w-32 bg-muted rounded animate-pulse"></div>
+                        <div
+                            class="h-6 w-32 bg-muted rounded animate-pulse"
+                        ></div>
                     </Card.Header>
                     <Card.Content class="space-y-3">
                         {#each Array(5) as _}
-                            <div class="h-20 bg-muted rounded animate-pulse"></div>
+                            <div
+                                class="h-20 bg-muted rounded animate-pulse"
+                            ></div>
                         {/each}
                     </Card.Content>
                 </Card.Root>
@@ -215,10 +241,16 @@
                                 <Tooltip.Provider>
                                     <Tooltip.Root>
                                         <Tooltip.Trigger>
-                                            <statusInfo.icon class="h-5 w-5 mt-1 {statusInfo.class}" />
+                                            <statusInfo.icon
+                                                class="h-5 w-5 mt-1 {statusInfo.class}"
+                                            />
                                         </Tooltip.Trigger>
                                         <Tooltip.Content>
-                                            <p>Status: {getStatusLabel(replicant.status)}</p>
+                                            <p>
+                                                Status: {getStatusLabel(
+                                                    replicant.status,
+                                                )}
+                                            </p>
                                         </Tooltip.Content>
                                     </Tooltip.Root>
                                 </Tooltip.Provider>
@@ -237,16 +269,24 @@
                         <!-- Description and Tags -->
                         <div class="flex items-center gap-4 mb-1">
                             <div class="flex items-center gap-2">
-                                <TagIcon class="h-4 w-4 ml-1 text-muted-foreground" />
+                                <TagIcon
+                                    class="h-4 w-4 ml-1 text-muted-foreground"
+                                />
                                 <div class="flex flex-wrap gap-1">
                                     {#if replicant.tags && replicant.tags.length > 0}
                                         {#each replicant.tags as tag}
-                                            <Badge variant="outline" class="text-xs">
+                                            <Badge
+                                                variant="outline"
+                                                class="text-xs"
+                                            >
                                                 {tag}
                                             </Badge>
                                         {/each}
                                     {:else}
-                                        <span class="text-xs text-muted-foreground italic">No tags</span>
+                                        <span
+                                            class="text-xs text-muted-foreground italic"
+                                            >No tags</span
+                                        >
                                     {/if}
                                 </div>
                             </div>
@@ -258,107 +298,169 @@
 
         <!-- Current Metrics -->
         <div class="px-4 lg:px-6 mt-1">
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-3 mb-4">
+            <div
+                class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-3 mb-4"
+            >
                 {#if replicant.currentMetrics?.cpuUsage !== undefined}
-                    <div class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/30">
+                    <div
+                        class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/50"
+                    >
                         <CpuIcon class="h-6 w-6 text-blue-500" />
-                        <span class="text-sm font-mono font-semibold text-foreground">
+                        <span
+                            class="text-sm font-mono font-semibold text-foreground"
+                        >
                             {replicant.currentMetrics.cpuUsage.toFixed(1)}%
                         </span>
-                        <span class="text-xs text-muted-foreground">CPU Usage</span>
+                        <span class="text-xs text-muted-foreground"
+                            >CPU Usage</span
+                        >
                     </div>
                 {:else}
-                    <div class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/30 animate-pulse">
+                    <div
+                        class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/50 animate-pulse"
+                    >
                         <div class="h-6 w-6 bg-muted rounded"></div>
                         <div class="h-4 w-12 bg-muted rounded"></div>
                         <div class="h-3 w-16 bg-muted rounded"></div>
                     </div>
                 {/if}
                 {#if replicant.currentMetrics?.memoryUsage !== undefined}
-                    <div class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/30">
+                    <div
+                        class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/50"
+                    >
                         <DatabaseIcon class="h-6 w-6 text-green-500" />
-                        <span class="text-sm font-mono font-semibold text-foreground">
+                        <span
+                            class="text-sm font-mono font-semibold text-foreground"
+                        >
                             {replicant.currentMetrics.memoryUsage.toFixed(1)}%
                         </span>
-                        <span class="text-xs text-muted-foreground">Memory Usage</span>
+                        <span class="text-xs text-muted-foreground"
+                            >Memory Usage</span
+                        >
                     </div>
                 {:else}
-                    <div class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/30 animate-pulse">
+                    <div
+                        class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/50 animate-pulse"
+                    >
                         <div class="h-6 w-6 bg-muted rounded"></div>
                         <div class="h-4 w-12 bg-muted rounded"></div>
                         <div class="h-3 w-16 bg-muted rounded"></div>
                     </div>
                 {/if}
                 {#if replicant.currentMetrics?.storageUsage !== undefined}
-                    <div class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/30">
+                    <div
+                        class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/50"
+                    >
                         <DatabaseIcon class="h-6 w-6 text-purple-500" />
-                        <span class="text-sm font-mono font-semibold text-foreground">
+                        <span
+                            class="text-sm font-mono font-semibold text-foreground"
+                        >
                             {replicant.currentMetrics.storageUsage.toFixed(1)}%
                         </span>
-                        <span class="text-xs text-muted-foreground">Storage Usage</span>
+                        <span class="text-xs text-muted-foreground"
+                            >Storage Usage</span
+                        >
                     </div>
                 {:else}
-                    <div class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/30 animate-pulse">
+                    <div
+                        class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/50 animate-pulse"
+                    >
                         <div class="h-6 w-6 bg-muted rounded"></div>
                         <div class="h-4 w-12 bg-muted rounded"></div>
                         <div class="h-3 w-16 bg-muted rounded"></div>
                     </div>
                 {/if}
                 {#if replicant.currentMetrics?.networkBandwidth !== undefined}
-                    <div class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/30">
+                    <div
+                        class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/50"
+                    >
                         <NetworkIcon class="h-6 w-6 text-orange-500" />
-                        <span class="text-sm font-mono font-semibold text-foreground">
-                            {formatBytes(replicant.currentMetrics.networkBandwidth)}/s
+                        <span
+                            class="text-sm font-mono font-semibold text-foreground"
+                        >
+                            {formatBytes(
+                                replicant.currentMetrics.networkBandwidth,
+                            )}/s
                         </span>
-                        <span class="text-xs text-muted-foreground">Network</span>
+                        <span class="text-xs text-muted-foreground"
+                            >Network</span
+                        >
                     </div>
                 {:else}
-                    <div class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/30 animate-pulse">
+                    <div
+                        class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/50 animate-pulse"
+                    >
                         <div class="h-6 w-6 bg-muted rounded"></div>
                         <div class="h-4 w-12 bg-muted rounded"></div>
                         <div class="h-3 w-16 bg-muted rounded"></div>
                     </div>
                 {/if}
                 {#if replicant.currentMetrics?.gpuUsage !== undefined}
-                    <div class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/30">
+                    <div
+                        class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/50"
+                    >
                         <ChartBarIcon class="h-6 w-6 text-red-500" />
-                        <span class="text-sm font-mono font-semibold text-foreground">
+                        <span
+                            class="text-sm font-mono font-semibold text-foreground"
+                        >
                             {replicant.currentMetrics.gpuUsage.toFixed(1)}%
                         </span>
-                        <span class="text-xs text-muted-foreground">GPU Usage</span>
+                        <span class="text-xs text-muted-foreground"
+                            >GPU Usage</span
+                        >
                     </div>
                 {:else}
-                    <div class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/30 animate-pulse">
+                    <div
+                        class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/50 animate-pulse"
+                    >
                         <div class="h-6 w-6 bg-muted rounded"></div>
                         <div class="h-4 w-12 bg-muted rounded"></div>
                         <div class="h-3 w-16 bg-muted rounded"></div>
                     </div>
                 {/if}
                 {#if replicant.currentMetrics?.gpuMemoryUsage !== undefined}
-                    <div class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/30">
+                    <div
+                        class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/50"
+                    >
                         <DatabaseIcon class="h-6 w-6 text-indigo-500" />
-                        <span class="text-sm font-mono font-semibold text-foreground">
-                            {replicant.currentMetrics.gpuMemoryUsage.toFixed(1)}%
+                        <span
+                            class="text-sm font-mono font-semibold text-foreground"
+                        >
+                            {replicant.currentMetrics.gpuMemoryUsage.toFixed(
+                                1,
+                            )}%
                         </span>
-                        <span class="text-xs text-muted-foreground">GPU Memory</span>
+                        <span class="text-xs text-muted-foreground"
+                            >GPU Memory</span
+                        >
                     </div>
                 {:else}
-                    <div class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/30 animate-pulse">
+                    <div
+                        class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/50 animate-pulse"
+                    >
                         <div class="h-6 w-6 bg-muted rounded"></div>
                         <div class="h-4 w-12 bg-muted rounded"></div>
                         <div class="h-3 w-16 bg-muted rounded"></div>
                     </div>
                 {/if}
                 {#if replicant.currentMetrics?.temperature !== undefined}
-                    <div class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/30">
+                    <div
+                        class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/50"
+                    >
                         <ThermometerIcon class="h-6 w-6 text-yellow-500" />
-                        <span class={`text-sm font-mono font-semibold ${getMetricColor(replicant.currentMetrics.temperature, 'temperature')}`}>
+                        <span
+                            class={`text-sm font-mono font-semibold ${getMetricColor(replicant.currentMetrics.temperature, "temperature")}`}
+                        >
                             {replicant.currentMetrics.temperature.toFixed(1)}°C
                         </span>
-                        <span class="text-xs text-muted-foreground">Temperature</span>
+                        <span class="text-xs text-muted-foreground"
+                            >Temperature</span
+                        >
                     </div>
                 {:else}
-                    <div class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/30 animate-pulse">
+                    <div
+                        class="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/50 animate-pulse"
+                    >
                         <div class="h-6 w-6 bg-muted rounded"></div>
                         <div class="h-4 w-12 bg-muted rounded"></div>
                         <div class="h-3 w-16 bg-muted rounded"></div>
@@ -411,42 +513,89 @@
                         </Card.Header>
                         <Card.Content>
                             {#if replicant.hardware}
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div
+                                    class="grid grid-cols-1 md:grid-cols-2 gap-6"
+                                >
                                     <!-- Left Column -->
                                     <div class="space-y-6">
                                         <!-- CPU Information -->
                                         <div>
-                                            <h4 class="text-sm font-medium text-muted-foreground mb-3">CPU</h4>
-                                            <div class="rounded-md border border-muted">
+                                            <h4
+                                                class="text-sm font-medium text-muted-foreground mb-3"
+                                            >
+                                                CPU
+                                            </h4>
+                                            <div
+                                                class="rounded-md border border-muted"
+                                            >
                                                 <Table.Root>
                                                     <Table.Header>
                                                         <Table.Row>
-                                                            <Table.Head class="font-semibold bg-muted w-1/3 first:rounded-tl-[5px]">Property</Table.Head>
-                                                            <Table.Head class="font-semibold bg-muted w-2/3 last:rounded-tr-[5px]">Value</Table.Head>
+                                                            <Table.Head
+                                                                class="font-semibold bg-muted w-1/3 first:rounded-tl-[5px]"
+                                                                >Property</Table.Head
+                                                            >
+                                                            <Table.Head
+                                                                class="font-semibold bg-muted w-2/3 last:rounded-tr-[5px]"
+                                                                >Value</Table.Head
+                                                            >
                                                         </Table.Row>
                                                     </Table.Header>
                                                     <Table.Body>
                                                         <Table.Row>
-                                                            <Table.Cell>Type</Table.Cell>
-                                                            <Table.Cell class="font-mono">{replicant.hardware.cpuType}</Table.Cell>
+                                                            <Table.Cell
+                                                                >Type</Table.Cell
+                                                            >
+                                                            <Table.Cell
+                                                                class="font-mono"
+                                                                >{replicant
+                                                                    .hardware
+                                                                    .cpuType}</Table.Cell
+                                                            >
                                                         </Table.Row>
                                                         <Table.Row>
-                                                            <Table.Cell>Socket</Table.Cell>
-                                                            <Table.Cell class="font-mono">{replicant.hardware.cpuSocket}</Table.Cell>
+                                                            <Table.Cell
+                                                                >Socket</Table.Cell
+                                                            >
+                                                            <Table.Cell
+                                                                class="font-mono"
+                                                                >{replicant
+                                                                    .hardware
+                                                                    .cpuSocket}</Table.Cell
+                                                            >
                                                         </Table.Row>
                                                         <Table.Row>
-                                                            <Table.Cell>Status</Table.Cell>
+                                                            <Table.Cell
+                                                                >Status</Table.Cell
+                                                            >
                                                             <Table.Cell>
-                                                                <StatusBadge status={replicant.status} class="text-xs" />
+                                                                <StatusBadge
+                                                                    status={replicant.status}
+                                                                    class="text-xs"
+                                                                />
                                                             </Table.Cell>
                                                         </Table.Row>
                                                         <Table.Row>
-                                                            <Table.Cell>Threads</Table.Cell>
-                                                            <Table.Cell class="font-mono">{replicant.hardware.cpuThreads}</Table.Cell>
+                                                            <Table.Cell
+                                                                >Threads</Table.Cell
+                                                            >
+                                                            <Table.Cell
+                                                                class="font-mono"
+                                                                >{replicant
+                                                                    .hardware
+                                                                    .cpuThreads}</Table.Cell
+                                                            >
                                                         </Table.Row>
                                                         <Table.Row>
-                                                            <Table.Cell>Memory</Table.Cell>
-                                                            <Table.Cell class="font-mono">{replicant.hardware.memorySize} MB</Table.Cell>
+                                                            <Table.Cell
+                                                                >Memory</Table.Cell
+                                                            >
+                                                            <Table.Cell
+                                                                class="font-mono"
+                                                                >{replicant
+                                                                    .hardware
+                                                                    .memorySize} MB</Table.Cell
+                                                            >
                                                         </Table.Row>
                                                     </Table.Body>
                                                 </Table.Root>
@@ -455,23 +604,49 @@
 
                                         <!-- GPU Information -->
                                         <div>
-                                            <h4 class="text-sm font-medium text-muted-foreground mb-3">GPU</h4>
-                                            <div class="rounded-md border border-muted">
+                                            <h4
+                                                class="text-sm font-medium text-muted-foreground mb-3"
+                                            >
+                                                GPU
+                                            </h4>
+                                            <div
+                                                class="rounded-md border border-muted"
+                                            >
                                                 <Table.Root>
                                                     <Table.Header>
                                                         <Table.Row>
-                                                            <Table.Head class="font-semibold bg-muted w-1/3 first:rounded-tl-[5px]">Property</Table.Head>
-                                                            <Table.Head class="font-semibold bg-muted w-2/3 last:rounded-tr-[5px]">Value</Table.Head>
+                                                            <Table.Head
+                                                                class="font-semibold bg-muted w-1/3 first:rounded-tl-[5px]"
+                                                                >Property</Table.Head
+                                                            >
+                                                            <Table.Head
+                                                                class="font-semibold bg-muted w-2/3 last:rounded-tr-[5px]"
+                                                                >Value</Table.Head
+                                                            >
                                                         </Table.Row>
                                                     </Table.Header>
                                                     <Table.Body>
                                                         <Table.Row>
-                                                            <Table.Cell>Type</Table.Cell>
-                                                            <Table.Cell class="font-mono">{replicant.hardware.gpuType}</Table.Cell>
+                                                            <Table.Cell
+                                                                >Type</Table.Cell
+                                                            >
+                                                            <Table.Cell
+                                                                class="font-mono"
+                                                                >{replicant
+                                                                    .hardware
+                                                                    .gpuType}</Table.Cell
+                                                            >
                                                         </Table.Row>
                                                         <Table.Row>
-                                                            <Table.Cell>PCIe ID</Table.Cell>
-                                                            <Table.Cell class="font-mono">{replicant.hardware.gpuPcieId}</Table.Cell>
+                                                            <Table.Cell
+                                                                >PCIe ID</Table.Cell
+                                                            >
+                                                            <Table.Cell
+                                                                class="font-mono"
+                                                                >{replicant
+                                                                    .hardware
+                                                                    .gpuPcieId}</Table.Cell
+                                                            >
                                                         </Table.Row>
                                                     </Table.Body>
                                                 </Table.Root>
@@ -480,31 +655,68 @@
 
                                         <!-- Storage Information -->
                                         <div>
-                                            <h4 class="text-sm font-medium text-muted-foreground mb-3">Storage</h4>
-                                            <div class="rounded-md border border-muted">
+                                            <h4
+                                                class="text-sm font-medium text-muted-foreground mb-3"
+                                            >
+                                                Storage
+                                            </h4>
+                                            <div
+                                                class="rounded-md border border-muted"
+                                            >
                                                 <Table.Root>
                                                     <Table.Header>
                                                         <Table.Row>
-                                                            <Table.Head class="font-semibold bg-muted w-1/3 first:rounded-tl-[5px]">Property</Table.Head>
-                                                            <Table.Head class="font-semibold bg-muted w-2/3 last:rounded-tr-[5px]">Value</Table.Head>
+                                                            <Table.Head
+                                                                class="font-semibold bg-muted w-1/3 first:rounded-tl-[5px]"
+                                                                >Property</Table.Head
+                                                            >
+                                                            <Table.Head
+                                                                class="font-semibold bg-muted w-2/3 last:rounded-tr-[5px]"
+                                                                >Value</Table.Head
+                                                            >
                                                         </Table.Row>
                                                     </Table.Header>
                                                     <Table.Body>
                                                         <Table.Row>
-                                                            <Table.Cell>Size</Table.Cell>
-                                                            <Table.Cell class="font-mono">{replicant.hardware.storageSize} GB</Table.Cell>
+                                                            <Table.Cell
+                                                                >Size</Table.Cell
+                                                            >
+                                                            <Table.Cell
+                                                                class="font-mono"
+                                                                >{replicant
+                                                                    .hardware
+                                                                    .storageSize}
+                                                                GB</Table.Cell
+                                                            >
                                                         </Table.Row>
                                                         <Table.Row>
-                                                            <Table.Cell>Path</Table.Cell>
-                                                            <Table.Cell class="font-mono">{replicant.hardware.storagePath}</Table.Cell>
+                                                            <Table.Cell
+                                                                >Path</Table.Cell
+                                                            >
+                                                            <Table.Cell
+                                                                class="font-mono"
+                                                                >{replicant
+                                                                    .hardware
+                                                                    .storagePath}</Table.Cell
+                                                            >
                                                         </Table.Row>
                                                         <Table.Row>
-                                                            <Table.Cell>Type</Table.Cell>
-                                                            <Table.Cell class="font-mono">NVMe SSD</Table.Cell>
+                                                            <Table.Cell
+                                                                >Type</Table.Cell
+                                                            >
+                                                            <Table.Cell
+                                                                class="font-mono"
+                                                                >NVMe SSD</Table.Cell
+                                                            >
                                                         </Table.Row>
                                                         <Table.Row>
-                                                            <Table.Cell>Interface</Table.Cell>
-                                                            <Table.Cell class="font-mono">PCIe 4.0 x4</Table.Cell>
+                                                            <Table.Cell
+                                                                >Interface</Table.Cell
+                                                            >
+                                                            <Table.Cell
+                                                                class="font-mono"
+                                                                >PCIe 4.0 x4</Table.Cell
+                                                            >
                                                         </Table.Row>
                                                     </Table.Body>
                                                 </Table.Root>
@@ -516,23 +728,47 @@
                                     <div class="space-y-6">
                                         <!-- Memory Information -->
                                         <div>
-                                            <h4 class="text-sm font-medium text-muted-foreground mb-3">Memory</h4>
-                                            <div class="rounded-md border border-muted">
+                                            <h4
+                                                class="text-sm font-medium text-muted-foreground mb-3"
+                                            >
+                                                Memory
+                                            </h4>
+                                            <div
+                                                class="rounded-md border border-muted"
+                                            >
                                                 <Table.Root>
                                                     <Table.Header>
                                                         <Table.Row>
-                                                            <Table.Head class="font-semibold bg-muted w-1/3 first:rounded-tl-[5px]">Property</Table.Head>
-                                                            <Table.Head class="font-semibold bg-muted w-2/3 last:rounded-tr-[5px]">Value</Table.Head>
+                                                            <Table.Head
+                                                                class="font-semibold bg-muted w-1/3 first:rounded-tl-[5px]"
+                                                                >Property</Table.Head
+                                                            >
+                                                            <Table.Head
+                                                                class="font-semibold bg-muted w-2/3 last:rounded-tr-[5px]"
+                                                                >Value</Table.Head
+                                                            >
                                                         </Table.Row>
                                                     </Table.Header>
                                                     <Table.Body>
                                                         <Table.Row>
-                                                            <Table.Cell>Size</Table.Cell>
-                                                            <Table.Cell class="font-mono">{replicant.hardware.memorySize} MB</Table.Cell>
+                                                            <Table.Cell
+                                                                >Size</Table.Cell
+                                                            >
+                                                            <Table.Cell
+                                                                class="font-mono"
+                                                                >{replicant
+                                                                    .hardware
+                                                                    .memorySize} MB</Table.Cell
+                                                            >
                                                         </Table.Row>
                                                         <Table.Row>
-                                                            <Table.Cell>Type</Table.Cell>
-                                                            <Table.Cell class="font-mono">DDR4</Table.Cell>
+                                                            <Table.Cell
+                                                                >Type</Table.Cell
+                                                            >
+                                                            <Table.Cell
+                                                                class="font-mono"
+                                                                >DDR4</Table.Cell
+                                                            >
                                                         </Table.Row>
                                                     </Table.Body>
                                                 </Table.Root>
@@ -541,35 +777,82 @@
 
                                         <!-- Network Information -->
                                         <div>
-                                            <h4 class="text-sm font-medium text-muted-foreground mb-3">Network</h4>
-                                            <div class="rounded-md border border-muted">
+                                            <h4
+                                                class="text-sm font-medium text-muted-foreground mb-3"
+                                            >
+                                                Network
+                                            </h4>
+                                            <div
+                                                class="rounded-md border border-muted"
+                                            >
                                                 <Table.Root>
                                                     <Table.Header>
                                                         <Table.Row>
-                                                            <Table.Head class="font-semibold bg-muted w-1/3 first:rounded-tl-[5px]">Property</Table.Head>
-                                                            <Table.Head class="font-semibold bg-muted w-2/3 last:rounded-tr-[5px]">Value</Table.Head>
+                                                            <Table.Head
+                                                                class="font-semibold bg-muted w-1/3 first:rounded-tl-[5px]"
+                                                                >Property</Table.Head
+                                                            >
+                                                            <Table.Head
+                                                                class="font-semibold bg-muted w-2/3 last:rounded-tr-[5px]"
+                                                                >Value</Table.Head
+                                                            >
                                                         </Table.Row>
                                                     </Table.Header>
                                                     <Table.Body>
                                                         <Table.Row>
-                                                            <Table.Cell>Type</Table.Cell>
-                                                            <Table.Cell class="font-mono">{replicant.hardware.networkType}</Table.Cell>
+                                                            <Table.Cell
+                                                                >Type</Table.Cell
+                                                            >
+                                                            <Table.Cell
+                                                                class="font-mono"
+                                                                >{replicant
+                                                                    .hardware
+                                                                    .networkType}</Table.Cell
+                                                            >
                                                         </Table.Row>
                                                         <Table.Row>
-                                                            <Table.Cell>Speed</Table.Cell>
-                                                            <Table.Cell class="font-mono">{replicant.hardware.networkSpeed}</Table.Cell>
+                                                            <Table.Cell
+                                                                >Speed</Table.Cell
+                                                            >
+                                                            <Table.Cell
+                                                                class="font-mono"
+                                                                >{replicant
+                                                                    .hardware
+                                                                    .networkSpeed}</Table.Cell
+                                                            >
                                                         </Table.Row>
                                                         <Table.Row>
-                                                            <Table.Cell>Interface</Table.Cell>
-                                                            <Table.Cell class="font-mono">{replicant.hardware.networkInterface}</Table.Cell>
+                                                            <Table.Cell
+                                                                >Interface</Table.Cell
+                                                            >
+                                                            <Table.Cell
+                                                                class="font-mono"
+                                                                >{replicant
+                                                                    .hardware
+                                                                    .networkInterface}</Table.Cell
+                                                            >
                                                         </Table.Row>
                                                         <Table.Row>
-                                                            <Table.Cell>PCIe ID</Table.Cell>
-                                                            <Table.Cell class="font-mono">{replicant.hardware.networkPcieId}</Table.Cell>
+                                                            <Table.Cell
+                                                                >PCIe ID</Table.Cell
+                                                            >
+                                                            <Table.Cell
+                                                                class="font-mono"
+                                                                >{replicant
+                                                                    .hardware
+                                                                    .networkPcieId}</Table.Cell
+                                                            >
                                                         </Table.Row>
                                                         <Table.Row>
-                                                            <Table.Cell>MAC Address</Table.Cell>
-                                                            <Table.Cell class="font-mono">{replicant.hardware.networkMac}</Table.Cell>
+                                                            <Table.Cell
+                                                                >MAC Address</Table.Cell
+                                                            >
+                                                            <Table.Cell
+                                                                class="font-mono"
+                                                                >{replicant
+                                                                    .hardware
+                                                                    .networkMac}</Table.Cell
+                                                            >
                                                         </Table.Row>
                                                     </Table.Body>
                                                 </Table.Root>
@@ -602,13 +885,21 @@
                         </Card.Header>
                         <Card.Content>
                             {#if replicantObservations.length > 0}
-                                <ObservationTable observations={replicantObservations} limit={10} />
+                                <ObservationTable
+                                    observations={replicantObservations}
+                                    limit={10}
+                                />
                             {:else}
                                 <div class="text-center py-8">
-                                    <ActivityIcon class="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                                    <h3 class="text-lg font-semibold mb-2">No Recent Activity</h3>
+                                    <ActivityIcon
+                                        class="h-12 w-12 mx-auto text-muted-foreground mb-4"
+                                    />
+                                    <h3 class="text-lg font-semibold mb-2">
+                                        No Recent Activity
+                                    </h3>
                                     <p class="text-sm text-muted-foreground">
-                                        No observations found for this replicant.
+                                        No observations found for this
+                                        replicant.
                                     </p>
                                 </div>
                             {/if}

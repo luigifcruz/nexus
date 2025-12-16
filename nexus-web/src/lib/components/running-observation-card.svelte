@@ -43,12 +43,14 @@
 </script>
 
 <Card.Root
-    class="cursor-pointer transition-all hover:shadow-md hover:scale-[1.02]"
+    class="cursor-pointer transition-all hover:shadow-md hover:scale-[1.02] border-2 border-green-500/15 bg-gradient-to-br from-green-500/[0.03] to-green-500/[0.06]"
     onclick={() => navigateToObservation(observation.observationId)}
 >
     <Card.Header>
         <Card.Title class="flex items-center gap-2">
-            <PlayIcon class="h-5 w-5 text-green-500" />
+            <div class="p-1.5 rounded-md bg-green-100 dark:bg-green-900/30">
+                <PlayIcon class="h-4 w-4 text-green-600 dark:text-green-400" />
+            </div>
             {observation.observationId}
         </Card.Title>
     </Card.Header>
@@ -56,7 +58,7 @@
     <Card.Content>
         <div class="space-y-4">
             <!-- TODO:API - Frequency not provided by API -->
-            <!-- <div class="flex items-center justify-center p-4 bg-muted/30 rounded-lg">
+            <!-- <div class="flex items-center justify-center p-4 bg-muted/50 rounded-lg">
                 <span class="text-lg font-mono font-semibold text-primary">
                     Frequency data unavailable
                 </span>
@@ -66,7 +68,9 @@
             {#if progress > 0}
                 <div class="space-y-2">
                     <div class="flex justify-between text-sm">
-                        <span class="text-muted-foreground">Progress (30m left)</span>
+                        <span class="text-muted-foreground"
+                            >Progress (30m left)</span
+                        >
                         <span class="font-medium">{Math.round(progress)}%</span>
                     </div>
                     <Progress value={progress} class="h-2" />
@@ -78,8 +82,12 @@
                 <Tooltip.Provider>
                     <Tooltip.Root>
                         <Tooltip.Trigger>
-                            <div class="flex items-center justify-center gap-1 p-2 rounded bg-muted/30">
-                                <ServerIcon class="h-4 w-4 flex-shrink-0 text-blue-500" />
+                            <div
+                                class="flex items-center justify-center gap-1 p-2 rounded bg-muted/50"
+                            >
+                                <ServerIcon
+                                    class="h-4 w-4 flex-shrink-0 text-blue-500"
+                                />
                                 <span class="font-mono font-medium text-xs">
                                     {observation.numberOfInstances}
                                 </span>
@@ -94,7 +102,7 @@
                 <!-- <Tooltip.Provider>
                     <Tooltip.Root>
                         <Tooltip.Trigger>
-                            <div class="flex items-center justify-center gap-1 p-2 rounded bg-muted/30">
+                            <div class="flex items-center justify-center gap-1 p-2 rounded bg-muted/50">
                                 <SatelliteDishIcon class="h-4 w-4 flex-shrink-0 text-green-500" />
                                 <span class="font-mono font-medium text-xs">
                                     N/A
@@ -110,7 +118,7 @@
                 <!-- <Tooltip.Provider>
                     <Tooltip.Root>
                         <Tooltip.Trigger>
-                            <div class="flex items-center justify-center gap-1 p-2 rounded bg-muted/30">
+                            <div class="flex items-center justify-center gap-1 p-2 rounded bg-muted/50">
                                 <DatabaseIcon class="h-4 w-4 flex-shrink-0 text-purple-500" />
                                 <span class="font-mono font-medium text-xs">
                                     N/A

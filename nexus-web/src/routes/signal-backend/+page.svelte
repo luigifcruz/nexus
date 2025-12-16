@@ -74,12 +74,7 @@
             style: "background-color: #fff3e0; border: 2px solid #ff9800; border-radius: 8px; padding: 15px; font-weight: bold; color: #f57c00; width: 140px; text-align: center;",
         };
 
-        nodes = [
-            ...antennaNodes,
-            ...ampNodes,
-            ...rfsocNodes,
-            signalSwitchNode,
-        ];
+        nodes = [...antennaNodes, ...ampNodes, ...rfsocNodes, signalSwitchNode];
 
         const antennaToAmpEdges = antennaNames.map((name) => ({
             id: `antenna-${name}-to-amp-${name}`,
@@ -142,6 +137,10 @@
     });
 </script>
 
+<svelte:head>
+    <title>Nexus - Signal Backend</title>
+</svelte:head>
+
 <div class="flex flex-col gap-6 py-6">
     <!-- Header -->
     <div class="px-4 lg:px-6">
@@ -151,7 +150,8 @@
                     Signal Backend Topology
                 </h1>
                 <p class="text-muted-foreground">
-                    Allen Telescope Array signal processing chain from antennas to network switch
+                    Allen Telescope Array signal processing chain from antennas
+                    to network switch
                 </p>
             </div>
         </div>

@@ -42,7 +42,6 @@
     let showDeleteConfirm = $state(false);
     let deleteConfirmInput = $state("");
 
-
     // Form state
     let formData = $state({
         imageId: "",
@@ -57,10 +56,15 @@
 
     // Filtered images
     let filteredImages = $derived(
-        images.filter((image) =>
-            image.imageId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            image.dockerImage.toLowerCase().includes(searchTerm.toLowerCase())
-        )
+        images.filter(
+            (image) =>
+                image.imageId
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase()) ||
+                image.dockerImage
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase()),
+        ),
     );
 
     // Reset form data
@@ -79,7 +83,6 @@
         editingImageId = "";
         showDeleteConfirm = false;
         deleteConfirmInput = "";
-
     }
 
     // Docker args management
@@ -161,7 +164,7 @@
 
     function navigateToImage(imageId: string) {
         // Load image data into form for viewing/editing
-        const image = images.find(img => img.imageId === imageId);
+        const image = images.find((img) => img.imageId === imageId);
         if (image) {
             formData = {
                 imageId: image.imageId,
@@ -182,6 +185,10 @@
     }
 </script>
 
+<svelte:head>
+    <title>Nexus - Images</title>
+</svelte:head>
+
 <!-- Page Header -->
 <div class="flex flex-col gap-6 py-6">
     <div class="px-4 lg:px-6">
@@ -200,7 +207,9 @@
 
         <!-- Search -->
         <div class="mt-6 relative max-w-sm">
-            <SearchIcon class="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+            <SearchIcon
+                class="absolute left-3 top-3 h-4 w-4 text-muted-foreground"
+            />
             <Input
                 bind:value={searchTerm}
                 placeholder="Search images..."
@@ -215,7 +224,9 @@
             <!-- Empty State -->
             <Card.Root>
                 <Card.Header class="text-center py-16">
-                    <ContainerIcon class="h-16 w-16 mx-auto text-muted-foreground mb-4" />
+                    <ContainerIcon
+                        class="h-16 w-16 mx-auto text-muted-foreground mb-4"
+                    />
                     <Card.Title class="text-xl">
                         {#if searchTerm}
                             No images match your search
@@ -225,9 +236,11 @@
                     </Card.Title>
                     <Card.Description class="text-base">
                         {#if searchTerm}
-                            Try adjusting your search terms or clear the search to see all images.
+                            Try adjusting your search terms or clear the search
+                            to see all images.
                         {:else}
-                            Get started by creating your first container image configuration.
+                            Get started by creating your first container image
+                            configuration.
                         {/if}
                     </Card.Description>
                     {#if !searchTerm}
@@ -246,31 +259,53 @@
                 <Table.Root>
                     <Table.Header>
                         <Table.Row class="hover:bg-transparent">
-                            <Table.Head class="font-semibold">Image ID</Table.Head>
-                            <Table.Head class="font-semibold">Docker Image</Table.Head>
-                            <Table.Head class="font-semibold">Entrypoint</Table.Head>
+                            <Table.Head class="font-semibold"
+                                >Image ID</Table.Head
+                            >
+                            <Table.Head class="font-semibold"
+                                >Docker Image</Table.Head
+                            >
+                            <Table.Head class="font-semibold"
+                                >Entrypoint</Table.Head
+                            >
                             <Table.Head class="w-16"></Table.Head>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
                         {#each filteredImages as image (image.imageId)}
                             <Table.Row class="hover:bg-muted/50">
-                                <Table.Cell class="font-mono font-medium py-2 cursor-pointer" onclick={() => navigateToImage(image.imageId)}>{image.imageId}</Table.Cell>
-                                <Table.Cell class="font-mono text-sm text-muted-foreground max-w-96 truncate py-2 cursor-pointer" onclick={() => navigateToImage(image.imageId)}>
+                                <Table.Cell
+                                    class="font-mono font-medium py-2 cursor-pointer"
+                                    onclick={() =>
+                                        navigateToImage(image.imageId)}
+                                    >{image.imageId}</Table.Cell
+                                >
+                                <Table.Cell
+                                    class="font-mono text-sm text-muted-foreground max-w-96 truncate py-2 cursor-pointer"
+                                    onclick={() =>
+                                        navigateToImage(image.imageId)}
+                                >
                                     {image.dockerImage}
                                 </Table.Cell>
-                                <Table.Cell class="font-mono text-sm py-2 cursor-pointer" onclick={() => navigateToImage(image.imageId)}>
+                                <Table.Cell
+                                    class="font-mono text-sm py-2 cursor-pointer"
+                                    onclick={() =>
+                                        navigateToImage(image.imageId)}
+                                >
                                     {#if image.dockerEntrypoint}
                                         {image.dockerEntrypoint}
                                     {:else}
-                                        <span class="text-muted-foreground">—</span>
+                                        <span class="text-muted-foreground"
+                                            >—</span
+                                        >
                                     {/if}
                                 </Table.Cell>
                                 <Table.Cell class="py-2">
                                     <Button
                                         variant="ghost"
                                         size="sm"
-                                        onclick={() => navigateToImage(image.imageId)}
+                                        onclick={() =>
+                                            navigateToImage(image.imageId)}
                                         class="h-6 px-3 text-xs"
                                     >
                                         Edit
@@ -288,32 +323,43 @@
 <!-- Create Image Sheet -->
 <Sheet.Root bind:open={createSheetOpen}>
     <Sheet.Content class="w-full sm:max-w-2xl overflow-hidden">
-        <form on:submit|preventDefault={handleSubmit} class="flex flex-col h-full">
+        <form
+            on:submit|preventDefault={handleSubmit}
+            class="flex flex-col h-full"
+        >
             <div class="flex-1 overflow-y-auto px-6 pt-6 pb-32 space-y-8">
                 <!-- Header Section -->
                 <div class="space-y-4">
                     <div>
-                        <h1 class="text-2xl font-bold">{isEditMode ? 'Edit' : 'Create'} Image</h1>
+                        <h1 class="text-2xl font-bold">
+                            {isEditMode ? "Edit" : "Create"} Image
+                        </h1>
                         <p class="text-base text-muted-foreground">
                             {isEditMode
-                                ? 'Modify the configuration and recreate the image with new settings.'
-                                : 'Configure a new image for observations.'
-                            }
+                                ? "Modify the configuration and recreate the image with new settings."
+                                : "Configure a new image for observations."}
                         </p>
                     </div>
                 </div>
                 <!-- Basic Configuration Card -->
                 <div class="space-y-4">
                     <div class="flex items-center gap-2 pb-2">
-                        <div class="p-2 rounded bg-primary/10 flex items-center justify-center">
+                        <div
+                            class="p-2 rounded bg-primary/10 flex items-center justify-center"
+                        >
                             <SettingsIcon class="h-5 w-5 text-primary" />
                         </div>
-                        <h3 class="font-semibold text-base">Basic Configuration</h3>
+                        <h3 class="font-semibold text-base">
+                            Basic Configuration
+                        </h3>
                     </div>
 
                     <div class="grid gap-6 sm:grid-cols-2">
                         <div class="space-y-2 sm:col-span-2">
-                            <Label for="imageId" class="text-sm font-medium flex items-center gap-1">
+                            <Label
+                                for="imageId"
+                                class="text-sm font-medium flex items-center gap-1"
+                            >
                                 Image ID <span class="text-destructive">*</span>
                             </Label>
                             <Input
@@ -325,17 +371,23 @@
                                 autocomplete="off"
                                 disabled={isEditMode}
                             />
-                            <p class="text-xs text-muted-foreground leading-relaxed">
+                            <p
+                                class="text-xs text-muted-foreground leading-relaxed"
+                            >
                                 {isEditMode
-                                    ? 'Image ID cannot be changed.'
-                                    : 'A unique identifier for this image. Use lowercase letters, numbers, and hyphens only.'
-                                }
+                                    ? "Image ID cannot be changed."
+                                    : "A unique identifier for this image. Use lowercase letters, numbers, and hyphens only."}
                             </p>
                         </div>
 
                         <div class="space-y-2 sm:col-span-2">
-                            <Label for="dockerImage" class="text-sm font-medium flex items-center gap-1">
-                                Docker Image <span class="text-destructive">*</span>
+                            <Label
+                                for="dockerImage"
+                                class="text-sm font-medium flex items-center gap-1"
+                            >
+                                Docker Image <span class="text-destructive"
+                                    >*</span
+                                >
                             </Label>
                             <Input
                                 id="dockerImage"
@@ -345,13 +397,19 @@
                                 class="font-mono"
                                 autocomplete="off"
                             />
-                            <p class="text-xs text-muted-foreground leading-relaxed">
-                                Full Docker image reference including registry, repository name, and tag.
+                            <p
+                                class="text-xs text-muted-foreground leading-relaxed"
+                            >
+                                Full Docker image reference including registry,
+                                repository name, and tag.
                             </p>
                         </div>
 
                         <div class="space-y-2 sm:col-span-2">
-                            <Label for="dockerEntrypoint" class="text-sm font-medium">
+                            <Label
+                                for="dockerEntrypoint"
+                                class="text-sm font-medium"
+                            >
                                 Custom Entrypoint
                             </Label>
                             <Input
@@ -361,8 +419,11 @@
                                 class="font-mono"
                                 autocomplete="off"
                             />
-                            <p class="text-xs text-muted-foreground leading-relaxed">
-                                Override the default container entrypoint. Leave empty to use the image's default.
+                            <p
+                                class="text-xs text-muted-foreground leading-relaxed"
+                            >
+                                Override the default container entrypoint. Leave
+                                empty to use the image's default.
                             </p>
                         </div>
                     </div>
@@ -371,24 +432,42 @@
                 <!-- Docker Arguments Card -->
                 <div class="space-y-4">
                     <div class="flex items-center gap-2 pb-2">
-                        <div class="p-2 rounded bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                            <CodeIcon class="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                        <div
+                            class="p-2 rounded bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center"
+                        >
+                            <CodeIcon
+                                class="h-5 w-5 text-blue-600 dark:text-blue-400"
+                            />
                         </div>
                         <div class="flex-1">
-                            <h3 class="font-semibold text-base">Command Arguments</h3>
-                            <p class="text-xs text-muted-foreground">Arguments to pass to the container command</p>
+                            <h3 class="font-semibold text-base">
+                                Command Arguments
+                            </h3>
+                            <p class="text-xs text-muted-foreground">
+                                Arguments to pass to the container command
+                            </p>
                         </div>
                         <Badge variant="secondary" class="text-xs">
-                            {formData.dockerArgs.length} arg{formData.dockerArgs.length !== 1 ? 's' : ''}
+                            {formData.dockerArgs.length} arg{formData.dockerArgs
+                                .length !== 1
+                                ? "s"
+                                : ""}
                         </Badge>
                     </div>
 
                     {#if formData.dockerArgs.length > 0}
-                        <div class="space-y-2 max-h-32 overflow-y-auto border rounded-lg p-3 bg-muted/20">
+                        <div
+                            class="space-y-2 max-h-32 overflow-y-auto border rounded-lg p-3 bg-muted/20"
+                        >
                             {#each formData.dockerArgs as arg, index}
-                                <div class="flex items-center gap-3 p-2 bg-background rounded border group hover:shadow-sm transition-shadow">
+                                <div
+                                    class="flex items-center gap-3 p-2 bg-background rounded border group hover:shadow-sm transition-shadow"
+                                >
                                     <div class="flex-1 min-w-0">
-                                        <code class="font-mono text-sm block truncate">{arg}</code>
+                                        <code
+                                            class="font-mono text-sm block truncate"
+                                            >{arg}</code
+                                        >
                                     </div>
                                     <Button
                                         type="button"
@@ -412,7 +491,7 @@
                                 class="font-mono"
                                 autocomplete="off"
                                 onkeydown={(e) => {
-                                    if (e.key === 'Enter') {
+                                    if (e.key === "Enter") {
                                         e.preventDefault();
                                         if (newArg.trim()) addArg();
                                     }
@@ -435,24 +514,42 @@
                 <!-- Environment Variables Card -->
                 <div class="space-y-4">
                     <div class="flex items-center gap-2 pb-2">
-                        <div class="p-2 rounded bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                            <DatabaseIcon class="h-5 w-5 text-green-600 dark:text-green-400" />
+                        <div
+                            class="p-2 rounded bg-green-100 dark:bg-green-900/30 flex items-center justify-center"
+                        >
+                            <DatabaseIcon
+                                class="h-5 w-5 text-green-600 dark:text-green-400"
+                            />
                         </div>
                         <div class="flex-1">
-                            <h3 class="font-semibold text-base">Environment Variables</h3>
-                            <p class="text-xs text-muted-foreground">Environment variables for the container runtime</p>
+                            <h3 class="font-semibold text-base">
+                                Environment Variables
+                            </h3>
+                            <p class="text-xs text-muted-foreground">
+                                Environment variables for the container runtime
+                            </p>
                         </div>
                         <Badge variant="secondary" class="text-xs">
-                            {formData.dockerEnv.length} var{formData.dockerEnv.length !== 1 ? 's' : ''}
+                            {formData.dockerEnv.length} var{formData.dockerEnv
+                                .length !== 1
+                                ? "s"
+                                : ""}
                         </Badge>
                     </div>
 
                     {#if formData.dockerEnv.length > 0}
-                        <div class="space-y-2 max-h-32 overflow-y-auto border rounded-lg p-3 bg-muted/20">
+                        <div
+                            class="space-y-2 max-h-32 overflow-y-auto border rounded-lg p-3 bg-muted/20"
+                        >
                             {#each formData.dockerEnv as env, index}
-                                <div class="flex items-center gap-3 p-2 bg-background rounded border group hover:shadow-sm transition-shadow">
+                                <div
+                                    class="flex items-center gap-3 p-2 bg-background rounded border group hover:shadow-sm transition-shadow"
+                                >
                                     <div class="flex-1 min-w-0">
-                                        <code class="font-mono text-sm block truncate">{env}</code>
+                                        <code
+                                            class="font-mono text-sm block truncate"
+                                            >{env}</code
+                                        >
                                     </div>
                                     <Button
                                         type="button"
@@ -476,7 +573,7 @@
                                 class="font-mono"
                                 autocomplete="off"
                                 onkeydown={(e) => {
-                                    if (e.key === 'Enter') {
+                                    if (e.key === "Enter") {
                                         e.preventDefault();
                                         if (newEnv.trim()) addEnv();
                                     }
@@ -498,16 +595,27 @@
 
                 <!-- Danger Zone -->
                 {#if isEditMode}
-                    <div class="p-4 bg-destructive/5 border border-destructive/20 rounded-lg">
+                    <div
+                        class="p-4 bg-destructive/5 border border-destructive/20 rounded-lg"
+                    >
                         <div class="flex items-center gap-2 pb-3">
-                            <div class="p-2 rounded bg-destructive/20 flex items-center justify-center">
-                                <AlertTriangleIcon class="h-5 w-5 text-destructive" />
+                            <div
+                                class="p-2 rounded bg-destructive/20 flex items-center justify-center"
+                            >
+                                <AlertTriangleIcon
+                                    class="h-5 w-5 text-destructive"
+                                />
                             </div>
-                            <h3 class="font-semibold text-base text-destructive">Danger Zone</h3>
+                            <h3
+                                class="font-semibold text-base text-destructive"
+                            >
+                                Danger Zone
+                            </h3>
                         </div>
 
                         <p class="text-sm text-muted-foreground mb-4">
-                            Delete this image configuration permanently. This action cannot be undone.
+                            Delete this image configuration permanently. This
+                            action cannot be undone.
                         </p>
 
                         {#if !showDeleteConfirm}
@@ -515,16 +623,23 @@
                                 type="button"
                                 variant="destructive"
                                 size="sm"
-                                onclick={() => { showDeleteConfirm = true; }}
+                                onclick={() => {
+                                    showDeleteConfirm = true;
+                                }}
                                 disabled={isSubmitting}
                             >
                                 <TrashIcon class="h-4 w-4 mr-2" />
                                 Delete Image
                             </Button>
                         {:else}
-                            <div class="space-y-3 p-3 bg-destructive/10 rounded border border-destructive/30">
+                            <div
+                                class="space-y-3 p-3 bg-destructive/10 rounded border border-destructive/30"
+                            >
                                 <p class="text-sm font-medium text-destructive">
-                                    Type <code class="bg-muted px-1 py-0.5 rounded text-xs">{editingImageId}</code> to confirm deletion:
+                                    Type <code
+                                        class="bg-muted px-1 py-0.5 rounded text-xs"
+                                        >{editingImageId}</code
+                                    > to confirm deletion:
                                 </p>
                                 <Input
                                     bind:value={deleteConfirmInput}
@@ -555,7 +670,9 @@
                                             createSheetOpen = false;
                                             resetForm();
                                         }}
-                                        disabled={isSubmitting || deleteConfirmInput !== editingImageId}
+                                        disabled={isSubmitting ||
+                                            deleteConfirmInput !==
+                                                editingImageId}
                                     >
                                         {#if isSubmitting}
                                             Deleting...
@@ -568,11 +685,12 @@
                         {/if}
                     </div>
                 {/if}
-
             </div>
 
             <!-- Fixed Footer -->
-            <div class="absolute bottom-0 left-0 right-0 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 p-6">
+            <div
+                class="absolute bottom-0 left-0 right-0 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 p-6"
+            >
                 <div class="flex justify-end gap-3">
                     <Button
                         type="button"
@@ -588,15 +706,17 @@
                     </Button>
                     <Button
                         type="submit"
-                        disabled={isSubmitting || !formData.imageId?.trim() || !formData.dockerImage?.trim()}
+                        disabled={isSubmitting ||
+                            !formData.imageId?.trim() ||
+                            !formData.dockerImage?.trim()}
                         class="min-w-32"
                     >
                         {#if isSubmitting}
                             <RefreshIcon class="h-4 w-4 mr-2 animate-spin" />
-                            {isEditMode ? 'Updating...' : 'Creating...'}
+                            {isEditMode ? "Updating..." : "Creating..."}
                         {:else}
                             <ContainerIcon class="h-4 w-4 mr-2" />
-                            {isEditMode ? 'Update Image' : 'Create Image'}
+                            {isEditMode ? "Update Image" : "Create Image"}
                         {/if}
                     </Button>
                 </div>
