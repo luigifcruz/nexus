@@ -27,5 +27,5 @@ vite.config.ts.timestamp-*
 # Auto-generated plugin routes
 src/lib/plugin-registry.generated.ts
 src/routes/seti-bench
-src/routes/chat
+src/routes/agent
 # End plugin routes

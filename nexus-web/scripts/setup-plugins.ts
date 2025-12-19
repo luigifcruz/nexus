@@ -38,9 +38,10 @@ for (const id of pluginDirs) {
     const manifest = await import(manifestUrl);
     plugins[id] = manifest.default;
 
-    // Create route symlink
+    // Create route symlink (strip "nexus-" prefix for cleaner URLs)
     const src = path.resolve(PLUGINS_DIR, id, "routes");
-    const dest = path.resolve(ROUTES_BASE, id);
+    const routeName = id.replace(/^nexus-/, "");
+    const dest = path.resolve(ROUTES_BASE, routeName);
 
     if (!fs.existsSync(src)) {
         console.log(`Skipping ${id} routes: no routes directory`);
@@ -56,7 +57,7 @@ for (const id of pluginDirs) {
     const relative = path.relative(path.dirname(dest), src);
     fs.symlinkSync(relative, dest);
     console.log(`Linked: ${dest} -> ${relative}`);
-    linkedRoutes.push(`${ROUTES_BASE}/${id}`);
+    linkedRoutes.push(`${ROUTES_BASE}/${routeName}`);
 }
 
 // Generate runtime registry
