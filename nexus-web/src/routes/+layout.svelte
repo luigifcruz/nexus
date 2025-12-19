@@ -6,10 +6,11 @@
     import { apiSync } from "$lib/services/sync";
     import { dataStore } from "$lib/stores/data.svelte";
 
-    import { browser } from "$app/environment";
     import { onMount } from "svelte";
     import LoaderIcon from "@tabler/icons-svelte/icons/loader-2";
     import ServerIcon from "@tabler/icons-svelte/icons/server";
+    import RefreshIcon from "@tabler/icons-svelte/icons/refresh";
+    import { Button } from "$lib/components/ui/button/index.js";
 
     let sidebarOpen = $state(true);
     let mounted = $state(false);
@@ -47,11 +48,18 @@
                     </div>
                 </div>
             {:else if !connectionStatus.connected && connectionStatus.error}
-                <div class="flex flex-col items-center justify-center h-screen gap-4">
-                    <ServerIcon class="h-12 w-12 text-destructive" />
-                    <div class="text-center max-w-md">
-                        <h2 class="text-xl font-semibold text-destructive">Connection Failed</h2>
+                <div class="flex flex-col items-center justify-center h-screen gap-6">
+                    <div class="p-4 rounded-full bg-destructive/10">
+                        <ServerIcon class="h-10 w-10 text-destructive" />
                     </div>
+                    <div class="text-center max-w-md space-y-3">
+                        <h2 class="text-xl font-semibold">Connection Failed</h2>
+                        <code class="block text-xs text-muted-foreground px-3 py-2 bg-muted rounded-md font-mono">{connectionStatus.error}</code>
+                    </div>
+                    <Button variant="outline" onclick={() => window.location.reload()}>
+                        <RefreshIcon class="h-4 w-4" />
+                        Retry
+                    </Button>
                 </div>
             {:else}
                 <div class="@container/main flex flex-1 flex-col gap-2">

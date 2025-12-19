@@ -13,6 +13,12 @@
     import MoonIcon from "@tabler/icons-svelte/icons/moon";
     import CameraIcon from "@tabler/icons-svelte/icons/camera";
     import MenuIcon from "@tabler/icons-svelte/icons/menu";
+    import FlaskIcon from "@tabler/icons-svelte/icons/flask";
+    import MessageCircleIcon from "@tabler/icons-svelte/icons/message-circle";
+    import MessageChatbotIcon from "@tabler/icons-svelte/icons/message-chatbot";
+    import AiIcon from "@tabler/icons-svelte/icons/ai";
+    import BrainIcon from "@tabler/icons-svelte/icons/brain";
+    import SparklesIcon from "@tabler/icons-svelte/icons/sparkles";
     import NavMain from "./nav-main.svelte";
     import NavSecondary from "./nav-secondary.svelte";
     import NavDocuments from "./nav-documents.svelte";
@@ -22,6 +28,36 @@
     import * as Sidebar from "$lib/components/ui/sidebar/index.js";
     import { browser } from "$app/environment";
     import type { ComponentProps } from "svelte";
+    import { plugins } from "$lib/plugin-registry.generated";
+
+    // Icon mapping for plugins
+    const iconMap: Record<string, typeof FlaskIcon> = {
+        flask: FlaskIcon,
+        message: MessageCircleIcon,
+        chatbot: MessageChatbotIcon,
+        ai: AiIcon,
+        brain: BrainIcon,
+        sparkles: SparklesIcon,
+    };
+
+    // Group plugins by category
+    const pluginsByCategory = $derived(
+        Object.values(plugins).reduce(
+            (acc, manifest) => {
+                acc[manifest.category] ??= [];
+                acc[manifest.category].push({
+                    name: manifest.name,
+                    url: manifest.path,
+                    icon: iconMap[manifest.icon ?? "flask"] ?? FlaskIcon,
+                });
+                return acc;
+            },
+            {} as Record<
+                string,
+                Array<{ name: string; url: string; icon: typeof FlaskIcon }>
+            >,
+        ),
+    );
 
     // Track current path for active menu highlighting
     let currentPath = $derived($page.url.pathname);
@@ -97,6 +133,7 @@
                 icon: CpuIcon,
             },
         ],
+
         navSecondary: [
             {
                 title: "Settings",
@@ -122,9 +159,16 @@
                     class="data-[slot=sidebar-menu-button]:!p-1.5"
                 >
                     {#snippet child({ props })}
-                        <a href="/" {...props} class="flex flex-col pl-1.5 py-2">
-                            <span class="text-3xl font-black tracking-wider">NEXUS</span>
-                            <span class="text-sm font-medium text-gray-600 dark:text-gray-400 tracking-wide -mt-1"
+                        <a
+                            href="/"
+                            {...props}
+                            class="flex flex-col pl-1.5 py-2"
+                        >
+                            <span class="text-3xl font-black tracking-wider"
+                                >NEXUS</span
+                            >
+                            <span
+                                class="text-sm font-medium text-gray-600 dark:text-gray-400 tracking-wide -mt-1"
                                 >Allen Telescope Array</span
                             >
                         </a>
@@ -137,6 +181,9 @@
         <NavMain items={data.navMain} {currentPath} />
         <NavDocuments items={data.services} title="Services" {currentPath} />
         <NavDocuments items={data.systems} title="Systems" {currentPath} />
+        {#each Object.entries(pluginsByCategory) as [category, items]}
+            <NavDocuments {items} title={category} {currentPath} />
+        {/each}
         <NavSecondary items={data.navSecondary} class="mt-auto" {currentPath} />
     </Sidebar.Content>
     <Separator />

@@ -6,8 +6,9 @@
     "scripts": {
         "clean:proto": "rm -rf ./src/lib/proto",
         "generate:proto": "bun clean:proto && mkdir -p ./src/lib/proto && npx protoc --plugin=protoc-gen-es=./node_modules/.bin/protoc-gen-es --es_out=./src/lib/proto --es_opt=target=ts,import_extension=ts,ts_nocheck=false -I ../nexus-common/proto ../nexus-common/proto/*.proto",
-        "dev": "bun generate:proto && vite dev",
-        "build": "bun generate:proto && vite build",
+        "setup:plugins": "bun scripts/setup-plugins.ts",
+        "dev": "bun setup:plugins && bun generate:proto && vite dev",
+        "build": "bun setup:plugins && bun generate:proto && vite build",
         "prepare": "svelte-kit sync || echo ''",
         "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
         "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
@@ -20,6 +21,7 @@
         "@internationalized/date": "^3.8.1",
         "@lucide/svelte": "^0.515.0",
         "@sveltejs/adapter-auto": "^6.0.0",
+        "@sveltejs/adapter-static": "^3.0.10",
         "@sveltejs/kit": "^2.22.0",
         "@sveltejs/vite-plugin-svelte": "^6.0.0",
         "@tabler/icons-svelte": "^3.31.0",
@@ -46,10 +48,15 @@
         "zod": "^3.25.64"
     },
     "dependencies": {
-        "@bufbuild/protoc-gen-es": "^2.9.0",
         "@bufbuild/protobuf": "^2.9.0",
+        "@bufbuild/protoc-gen-es": "^2.9.0",
         "@connectrpc/connect": "^2.1.0",
         "@connectrpc/connect-web": "^2.1.0",
-        "@xyflow/svelte": "^1.2.4"
+        "@types/d3": "^7.4.3",
+        "@types/three": "^0.182.0",
+        "@xyflow/svelte": "^1.2.4",
+        "d3": "^7.9.0",
+        "svelteplot": "^0.8.1",
+        "three": "^0.182.0"
     }
 }

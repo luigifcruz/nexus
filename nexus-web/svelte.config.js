@@ -14,6 +14,8 @@ const config = {
         adapter: adapter(),
         alias: {
             "@/*": "./path/to/lib/*",
+            $plugins: "./plugins",
+            "$plugins/*": "./plugins/*",
         },
     },
 };
