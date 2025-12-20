@@ -158,6 +158,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let meta_handler = container.create_meta_handler();
     let replicant_handler = container.create_replicant_handler();
     let nexus_handler = container.create_nexus_handler();
+    let instance_handler = container.create_instance_handler();
 
     // Create reflection service
     let reflection_service = tonic_reflection::server::Builder::configure()
@@ -176,6 +177,11 @@ async fn main() -> Result<(), Box<dyn Error>> {
             .add_service(transport::ReplicantServer::new(replicant_handler))
             .add_service(transport::MetaServer::new(meta_handler))
             .add_service(transport::NexusServer::new(nexus_handler))
+            .add_service(
+                nexus_common::proto::instance::instance_server::InstanceServer::new(
+                    instance_handler,
+                ),
+            )
             .serve_with_incoming_shutdown(TcpListenerStream::new(listener), async {
                 // Wait for shutdown signal
                 tokio::signal::ctrl_c()

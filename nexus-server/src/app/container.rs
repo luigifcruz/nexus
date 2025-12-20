@@ -15,7 +15,7 @@ use crate::repositories::traits::{
     ObservationRepository, ReplicantRepository,
 };
 use crate::transport::connections::{ConnectionManager, SubscriptionManager};
-use crate::transport::grpc::{MetaHandler, NexusHandler, ReplicantHandler};
+use crate::transport::grpc::{InstanceHandler, MetaHandler, NexusHandler, ReplicantHandler};
 
 pub struct Container {
     // Repositories
@@ -190,6 +190,13 @@ impl Container {
             Arc::clone(&self.instance_service),
             Arc::clone(&self.image_service),
             Arc::clone(&self.subscription_manager),
+        )
+    }
+
+    pub fn create_instance_handler(&self) -> InstanceHandler {
+        InstanceHandler::new(
+            Arc::clone(&self.instance_service),
+            Arc::clone(&self.connection_manager),
         )
     }
 
